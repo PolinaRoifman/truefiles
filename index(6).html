@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Файлы Правды</title>
+<style>
+/* Layout: one centered 90s homepage column on a starfield, stacked like a hand-coded site */
+:root{
+  --void:#14143f; --ink:#e8e8e8; --yolk:#ffff00; --slime:#39ff14;
+  --alarm:#ff2a2a; --hotpink:#ff3cf2; --cyan:#00ffff; --link:#66b3ff; --visited:#c58cff;
+  --navy:#0000a8; --blood:#9b0000;
+  --serif:"Times New Roman",Times,Georgia,serif;
+  --loud:Impact,"Arial Black","Helvetica Neue",Arial,sans-serif;
+  --mono:"Courier New",Courier,monospace;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+body{
+  margin:0;
+  background-color:var(--void);
+  background-image:
+    radial-gradient(1.5px 1.5px at 20px 30px,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 140px 80px,#dde,transparent),
+    radial-gradient(2px 2px at 260px 160px,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 60px 210px,#ccf,transparent),
+    radial-gradient(1.5px 1.5px at 330px 40px,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 200px 260px,#fff,transparent),
+    radial-gradient(2px 2px at 100px 140px,#ffd,transparent),
+    radial-gradient(1.5px 1.5px at 300px 230px,#fcf,transparent),
+    radial-gradient(ellipse at 50% 0%,#2a2a6e 0%,transparent 70%);
+  background-size:380px 300px,380px 300px,380px 300px,380px 300px,380px 300px,380px 300px,380px 300px,380px 300px,100% 900px;
+  background-repeat:repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,no-repeat;
+  color:var(--ink); font-family:var(--serif); font-size:17px; line-height:1.45;
+  padding-inline:16px; padding-block:12px 40px;
+}
+.wrap{max-width:780px;margin:0 auto;text-align:center}
+a{color:var(--link)} a:visited{color:var(--visited)} a:hover{color:var(--yolk)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px dashed var(--yolk);outline-offset:3px}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:.5em auto;max-width:62ch}
+
+.notice{border:4px solid var(--yolk);background:repeating-linear-gradient(45deg,#000 0 14px,#ffd400 14px 28px);padding:6px;margin-block:8px 14px}
+.notice div{background:#000;color:var(--yolk);font-family:var(--loud);letter-spacing:.06em;font-size:clamp(15px,3.6vw,22px);padding:6px 8px}
+
+h1{font-family:var(--loud);font-weight:400;font-size:clamp(34px,8vw,64px);line-height:1;color:var(--slime);text-shadow:3px 3px 0 var(--alarm),6px 6px 0 #000}
+.beware{font-style:italic;font-size:22px;color:var(--alarm);letter-spacing:.45em;margin-top:6px}
+.blink{animation:blink 1s steps(2,start) infinite}
+@keyframes blink{to{visibility:hidden}}
+.badge{display:inline-block;font:700 11px/1 var(--mono);color:#000;background:var(--yolk);border:2px outset #fff;padding:3px 5px;vertical-align:middle;margin-left:6px;transform:rotate(-6deg)}
+.badge.red{background:var(--alarm);color:#fff}
+
+.eyebtn{background:none;border:0;padding:0;cursor:pointer;display:inline-block}
+.eyebtn svg{display:block;max-width:100%}
+#lid{transform-box:fill-box;transform-origin:50% 0;transform:scaleY(0);transition:transform .12s}
+.eyebtn.blink1 #lid{transform:scaleY(1)}
+.eyebtn.shut #lid{transform:scaleY(1);transition:transform .6s}
+.eyebtn.shut #lash{opacity:1}
+.unwatched{font:700 18px var(--mono);color:var(--alarm);letter-spacing:.2em;margin:4px auto}
+.whisper{position:fixed;inset:0;z-index:70;display:grid;place-items:center;pointer-events:none;padding:16px;text-align:center;font:italic 700 clamp(22px,6vw,40px) var(--serif);color:#fff;text-shadow:0 0 12px var(--alarm),0 0 2px #000;animation:whisper 4s ease forwards}
+@keyframes whisper{0%{opacity:0}15%{opacity:1}80%{opacity:1}100%{opacity:0}}
+body.dark .wrap{filter:grayscale(1) brightness(.55);transition:filter 1s}
+.wrap{transition:filter 1s}
+.rocket{position:fixed;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:40;background:none;border:0;padding:0;cursor:pointer;line-height:0}
+.rocket img{display:block;height:min(170px,26vh);width:auto;max-width:none;filter:drop-shadow(0 0 4px #0008)}
+.rocket.gone{visibility:hidden}
+.rocket.back{animation:rback .8s ease}
+@keyframes rback{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+.scaff{position:fixed;z-index:41;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,transparent 0 calc(33.3% - 3px),#a0703a calc(33.3% - 3px) 33.3%),
+    repeating-linear-gradient(0deg,#c8964f 0 3px,transparent 3px 26px);
+  border-left:3px solid #a0703a;border-right:3px solid #a0703a}
+.scaff .sign{position:absolute;top:-22px;left:50%;transform:translateX(-50%) rotate(-4deg);background:var(--yolk);color:#000;font:700 10px var(--mono);padding:2px 5px;border:2px solid #000;white-space:nowrap}
+.scaff .cnt{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);color:var(--yolk);font:700 12px var(--mono);white-space:nowrap}
+.scaff .w{position:absolute;font-size:18px;line-height:1}
+.scaff .w1{left:-6px;animation:climb 4s ease-in-out infinite alternate}
+.scaff .w2{right:-6px;animation:climb 5.5s ease-in-out infinite alternate-reverse}
+.scaff .w3{top:40%;animation:walk 3s ease-in-out infinite alternate}
+.scaff .w4{top:75%;left:30%;animation:hammer .35s ease-in-out infinite alternate}
+@keyframes climb{from{top:85%}to{top:0}}
+@keyframes walk{from{left:0}to{left:calc(100% - 18px)}}
+@keyframes hammer{from{transform:rotate(-15deg)}to{transform:rotate(15deg) translateY(-3px)}}
+.nomore{position:fixed;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:40;width:150px;background:#f3e6c4;color:#7a0000;border:4px double #7a0000;padding:8px;font:12px/1.3 var(--serif);text-align:center;transform:rotate(-5deg);box-shadow:4px 4px 0 #0008}
+.nomore b{display:block;font:700 12px var(--mono);letter-spacing:.15em}
+.nomore big{display:block;font:700 19px/1.05 var(--loud);margin:4px 0;color:#c00}
+.nomore small{display:block;font-size:10px;color:#555}
+.frag{position:fixed;z-index:85;pointer-events:none;background-repeat:no-repeat;will-change:transform}
+.boom{position:fixed;z-index:84;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff 0,#ffe066 25%,#ff7b00 55%,transparent 72%);animation:boom .7s ease-out forwards}
+@keyframes boom{to{transform:scale(9);opacity:0}}
+.spark{position:fixed;z-index:84;width:8px;height:8px;border-radius:50%;pointer-events:none;background:#ffb300;box-shadow:0 0 8px #ff6a00}
+@keyframes spin{to{transform:rotateY(360deg)}}
+
+hr{border:0;height:6px;margin:22px auto;background:linear-gradient(90deg,var(--alarm),var(--yolk),var(--slime),var(--cyan),var(--hotpink),var(--alarm))}
+hr.dots{height:auto;background:none;color:var(--hotpink);font-size:14px;letter-spacing:.6em;overflow:hidden;white-space:nowrap}
+hr.dots::before{content:"♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦"}
+
+.ticker{background:#200;border:2px inset #800;color:var(--yolk);font:700 15px var(--mono);overflow:hidden;white-space:nowrap;padding:4px 0}
+.ticker span{display:inline-block;padding-left:100%;animation:scroll 48s linear infinite}
+@keyframes scroll{to{transform:translateX(-100%)}}
+
+nav{font-size:16px;line-height:2}
+nav a{white-space:nowrap}
+nav .d{color:var(--hotpink);margin-inline:6px}
+
+h2{font-family:var(--loud);font-weight:400;font-size:clamp(26px,5.5vw,36px);color:var(--yolk);margin-bottom:8px}
+h2 u{text-decoration-color:var(--alarm)}
+
+.news{border:3px double var(--cyan);background:#000a;padding:14px 16px;text-align:left}
+.news h3{color:var(--cyan);font-size:22px;text-align:center}
+.news .big{font-family:var(--loud);font-size:34px;color:var(--alarm);white-space:nowrap}
+
+.files{list-style:none;padding:0;margin:0;display:grid;gap:14px;text-align:left}
+.files li{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:start}
+.files li>b{color:var(--alarm);font-size:20px;line-height:1.2}
+.files h3{font-size:20px;color:var(--hotpink);display:inline}
+.files p{margin:.15em 0 0;max-width:none;font-size:16px}
+.files .note{color:var(--cyan);font-style:italic}
+.files li>div{min-width:0}
+
+.warn{color:var(--alarm);font-style:italic;font-size:15px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px;margin-top:12px}
+figure{margin:0;background:#c0c0c0;border:3px outset #eee;padding:8px 8px 6px;color:#000}
+.photo .frame{aspect-ratio:4/3;max-width:100%;background:#222;overflow:hidden;position:relative}
+.photo img{display:block;width:100%;height:100%;object-fit:cover;filter:contrast(1.1) sepia(.25)}
+.photo:nth-child(odd){transform:rotate(-1.2deg)} .photo:nth-child(3n){transform:rotate(1.5deg)}
+.photo.missing img{display:none}
+.photo.missing .frame{background:repeating-linear-gradient(45deg,#333 0 10px,#2a2a2a 10px 20px);display:grid;place-items:center}
+.photo.missing .frame::after{content:"ФОТО ЗАСЕКРЕЧЕНО";font:700 14px var(--mono);color:var(--alarm);border:3px solid var(--alarm);padding:4px 8px;transform:rotate(-12deg);background:#000c}
+figcaption{font:13px/1.3 var(--mono);margin-top:6px}
+figcaption b{display:block;font-family:var(--serif);font-size:15px}
+
+.cipher{border:2px ridge var(--slime);background:#001400;padding:14px;font-family:var(--mono);color:var(--slime)}
+.cipher .msg{font-size:clamp(15px,3.8vw,21px);letter-spacing:.1em;word-break:break-word;margin:10px 0;min-height:1.4em}
+.cipher label{display:block;font-size:14px}
+.cipher input[type=range]{width:min(320px,100%);accent-color:var(--slime)}
+.cipher output{color:var(--yolk);font-weight:700}
+.cipher textarea{width:100%;box-sizing:border-box;background:#000;color:var(--yolk);border:2px inset var(--slime);font:16px var(--mono);padding:8px;margin-top:4px;resize:vertical}
+.cipher .msg{white-space:pre-wrap}
+
+
+.blog{border:3px double var(--cyan);background:#000a;padding:6px 16px 12px;text-align:left;display:grid;gap:4px}
+.blog article{border-bottom:1px dashed #556;padding-block:8px}
+.blog .bd{margin:0;font:700 13px var(--mono);color:var(--slime)}
+.blog article p:last-child{margin:.2em 0 0;max-width:none}
+.counter{display:inline-flex;gap:2px;margin-top:6px}
+.counter span{background:#000;color:var(--slime);font:700 20px var(--mono);border:1px solid #444;padding:1px 5px;font-variant-numeric:tabular-nums}
+.small{font-size:13px;color:#aaa}
+.back{font-size:20px;font-weight:700}
+.btn88{display:inline-block;width:88px;height:31px;border:2px outset #ccc;font:700 9px/1.1 var(--mono);color:#000;padding:3px;vertical-align:middle;margin:3px;text-transform:uppercase;overflow:hidden}
+
+/* КАПЧА */
+.gate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;
+  padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));
+  background:#14143fee;overflow-y:auto}
+.cap{width:min(420px,100%);background:#f4f4f4;color:#111;border:2px solid #888;box-shadow:8px 8px 0 var(--alarm);font-family:Arial,Helvetica,sans-serif;text-align:left}
+.cap-head{background:var(--navy);color:#fff;padding:14px}
+.cap-head p{margin:0;font-size:13px;opacity:.85}
+.cap-head h2{font:700 19px/1.3 Arial,sans-serif;color:#fff;margin:4px 0 0}
+.cap-head h2 em{font-style:normal;color:var(--yolk);font-size:23px}
+.cap-body{padding:14px;display:grid;gap:12px}
+.cap-body p{margin:0;max-width:none}
+.chk{display:flex;align-items:center;gap:12px;border:1px solid #ccc;background:#fff;padding:14px;font-size:17px;cursor:pointer}
+.chk input{width:26px;height:26px;accent-color:#2a7}
+.grid9{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.tile{aspect-ratio:1;max-width:100%;font-size:clamp(30px,10vw,46px);display:grid;place-items:center;background:#cfd8dc;border:3px solid transparent;cursor:pointer;padding:0}
+.tile:nth-child(odd){filter:grayscale(.7) contrast(1.4)} .tile:nth-child(3n){filter:hue-rotate(120deg) blur(.6px)}
+.tile[aria-pressed="true"]{border-color:#1565c0;background:#90caf9;transform:scale(.92)}
+.cap-q{font-weight:700;font-size:16px}
+.cap-q span{color:var(--blood);text-transform:uppercase}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.cbtn{font:700 15px Arial,sans-serif;background:#1565c0;color:#fff;border:0;padding:10px 14px;cursor:pointer}
+.cbtn.alt{background:#e0e0e0;color:#111;border:1px solid #999}
+.err{color:#fff;background:var(--alarm);padding:8px 10px;font-weight:700}
+.hint{font-style:italic;color:#555}
+.scan{font:14px var(--mono);color:#333}
+#pad{width:100%;max-width:100%;height:auto;aspect-ratio:380/240;background:#fff;border:2px dashed #999;touch-action:none;cursor:crosshair;display:block}
+.deleg{font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.deleg select{font:15px Arial,sans-serif;padding:4px}
+.archive{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:12px}
+.rab{margin:0;background:#c0c0c0;border:3px outset #eee;padding:6px 6px 5px;color:#000;position:relative}
+.rab:nth-child(3n){transform:rotate(-1.5deg)} .rab:nth-child(4n){transform:rotate(1.2deg)}
+.rab img{display:block;width:100%;height:auto;background:#fff;image-rendering:pixelated}
+.rab figcaption{font:12px/1.3 var(--mono);margin-top:4px}
+.rab figcaption b{font:700 13px var(--serif)}
+.rab .stampm{position:absolute;top:8px;right:8px;font:700 10px var(--mono);color:var(--alarm);border:2px solid var(--alarm);padding:1px 4px;transform:rotate(12deg);background:#fffc}
+.rab .kill{font:11px var(--mono);background:#000;color:var(--alarm);border:1px solid var(--alarm);padding:2px 6px;margin-top:4px;cursor:pointer}
+.arch-empty{border:2px dashed var(--hotpink);padding:16px;color:var(--ink)}
+.chk{transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.hare{display:grid;place-items:center;margin:0 auto;background:#1a1a40;border:3px outset #888;border-radius:50%;width:150px;height:150px;cursor:pointer;padding:0}
+.hare svg{display:block}
+.lid2{transform-box:fill-box;transform-origin:50% 0;transform:scaleY(0)}
+.hare.bonk .lid2{animation:blinkLid .2s}
+@keyframes blinkLid{50%{transform:scaleY(1)}}
+.hare:active{transform:scale(.88) rotate(-8deg)}
+
+.verdict{background:#fff3b0;border:1px solid #c9a800;padding:8px 10px;font-weight:700}
+.flyer{position:fixed;left:0;top:0;z-index:80;pointer-events:none;background:#fff;border:3px solid #000;max-width:none;will-change:transform}
+.cap-foot{border-top:1px solid #ccc;padding:8px 14px;font-size:11px;color:#777;display:flex;justify-content:space-between;gap:8px}
+
+@media (prefers-reduced-motion:reduce){.blink,.eye,.ticker span{animation:none}.ticker span{padding-left:0;white-space:normal}}
+</style>
+</head>
+<body>
+<!-- ============ КАПЧА ============ -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="capTitle">
+  <div class="cap">
+    <div class="cap-head">
+      <p>Проверка безопасности ▪ шаг <span id="stepN">1</span> из <span id="stepT">3</span></p>
+      <h2 id="capTitle">Этот сайт предназначен только для <em>ЛЮДЕЙ</em>, Арбитр и псевдолюди не пройдут</h2>
+    </div>
+    <div class="cap-body">
+      <div id="err" class="err" hidden></div>
+
+      <div id="s1">
+        <label class="chk" for="notArb"><input type="checkbox" id="notArb"> Я человек. Я не Арбитр.</label>
+        <p class="scan" id="scan" hidden>Анализ души<span class="blink">...</span></p>
+      </div>
+
+      <div id="s2" hidden>
+        <p class="cap-q">Отметьте все квадраты, где есть <span>настоящие</span> птицы</p>
+        <div class="grid9" id="grid"></div>
+        <p class="hint" id="hint" hidden>Подсказка: прочитайте задание ещё раз. Медленно. Как человек.</p>
+        <div class="row"><button class="cbtn" id="birdsOk" type="button">Подтвердить</button></div>
+      </div>
+
+      <div id="sCount" hidden>
+        <p class="cap-q">Какой это шаг по счёту?</p>
+        <p class="hint">Цифрами отвечать нельзя: цифрами пользуется Арбитр. Отстучите ответ по глазу. Одно моргание — одна единица.</p>
+        <button class="hare" id="tapHare" type="button" aria-label="Постучать по глазу"><svg viewBox="0 0 80 48" width="120" height="72" aria-hidden="true">
+<defs><clipPath id="almond2"><path d="M4 24 Q40 -6 76 24 Q40 54 4 24Z"/></clipPath></defs>
+<g clip-path="url(#almond2)"><rect width="80" height="48" fill="#fff"/><circle cx="40" cy="24" r="12" fill="#ff3cf2"/><circle cx="40" cy="24" r="5" fill="#000"/><circle cx="36" cy="20" r="2" fill="#fff"/>
+<rect class="lid2" x="0" y="0" width="80" height="48" fill="#5a2a6a"/></g>
+<path d="M4 24 Q40 -6 76 24 Q40 54 4 24Z" fill="none" stroke="#ff3cf2" stroke-width="3"/></svg></button>
+        <p class="scan" id="countMsg" hidden></p>
+        <div class="row">
+          <button class="cbtn" id="countOk" type="button">Отправить стуки</button>
+          <button class="cbtn alt" id="countReset" type="button">Сбросить</button>
+        </div>
+      </div>
+
+      <div id="s3" hidden>
+        <p class="cap-q">Последний шаг. Нарисуйте <span>зайца</span></p>
+        <p class="hint">Машины рисуют идеально. Люди — нет. Покажите, на что вы способны.</p>
+        <label class="deleg" for="nation">Ваша делегация:
+          <select id="nation">
+            <option>Не скажу</option><option>ФОБ</option><option>Амактай</option><option>СРГ</option><option>Долор</option><option>Эже-Рузе</option><option>Ли ТК</option><option>Без гражданства</option>
+          </select>
+        </label>
+        <canvas id="pad" width="380" height="240" aria-label="Поле для рисования зайца"></canvas>
+        <p class="verdict" id="verdict" aria-live="polite" hidden></p>
+        <div class="row">
+          <button class="cbtn" id="rabbitOk" type="button">Это заяц</button>
+          <button class="cbtn alt" id="rabbitClear" type="button">Стереть</button>
+        </div>
+      </div>
+
+    </div>
+    <div class="cap-foot"><span>reCAPTCHA? НЕТ. ДУШАКАПЧА™</span><span>Конфиденциальность — миф</span></div>
+  </div>
+</div>
+
+<!-- ============ САЙТ ============ -->
+<div class="wrap" id="top">
+
+<div class="notice"><div>⚠ ВНИМАНИЕ ⚠ ЭТОТ САЙТ ПРОСЛУШИВАЕТСЯ ⚠</div></div>
+
+<button class="eyebtn" id="eyeBtn" type="button" aria-label="Глаз">
+<svg viewBox="0 0 80 48" width="88" height="53" aria-hidden="true">
+<defs><clipPath id="almond"><path d="M4 24 Q40 -6 76 24 Q40 54 4 24Z"/></clipPath></defs>
+<g clip-path="url(#almond)">
+<rect width="80" height="48" fill="#fff"/>
+<g id="irisG"><circle cx="40" cy="24" r="12" fill="#ff3cf2"/><circle cx="40" cy="24" r="5" fill="#000"/><circle cx="36" cy="20" r="2" fill="#fff"/></g>
+<rect id="lid" x="0" y="0" width="80" height="48" fill="#5a2a6a"/>
+</g>
+<path d="M4 24 Q40 -6 76 24 Q40 54 4 24Z" fill="none" stroke="#ff3cf2" stroke-width="3"/>
+<path id="lash" d="M4 24 Q40 54 76 24" fill="none" stroke="#ff3cf2" stroke-width="3" opacity="0"/>
+</svg>
+</button>
+<p class="unwatched" id="unwatched" hidden>НАБЛЮДЕНИЕ ОТКЛЮЧЕНО</p>
+<h1>ФАЙЛЫ ПРАВДЫ</h1>
+<p class="beware">О с т о р о ж н о . . . . .</p>
+<p>Добро пожаловать на мой Сайт!! Вы нашли то место, которое <b>ОНИ</b> не хотят, чтобы вы нашли.
+Читайте всё. Никому не верьте. <span class="badge">ОБНОВЛЕНО!</span></p>
+
+<div class="ticker" role="marquee"><span>
++++ СРОЧНО: ЧРЕЗВЫЧАЙНАЯ СЕССИЯ ООН ПО «ПРОПАВШЕЙ ПЕРЕПИСИ» +++ 1 400 000 ЧЕЛОВЕК ИСЧЕЗЛИ И НИКТО НЕ ВОЛНУЕТСЯ??? +++ ГЕНСЕК ОПЯТЬ НЕ ЕЛ НА ПРИЁМЕ +++ В ЭЖЕ-РУЗЕ ВТОРНИК +++ ЛУНА СЕГОДНЯ ПОЛНАЯ. КТО-ТО ДОЛЖЕН +++ ПТИЦ ПО-ПРЕЖНЕМУ НЕ СУЩЕСТВУЕТ +++
+</span></div>
+
+<hr class="dots">
+
+<nav aria-label="Разделы">
+<a href="#news">Новости дня</a> <span class="d">♦</span> <a href="#files">Засекречено</a> <span class="d">♦</span> <a href="#gallery">Доказательства</a> <span class="d">♦</span> <a href="#rabbits">Архив зайцев</a> <span class="d">♦</span> <a href="#blog">Дневник</a> <span class="d">♦</span> <a href="#cipher">Дешифратор</a> <span class="d">♦</span> <a href="#files">Ухо</a> <span class="d">♦</span> <a href="#files">Ли ТК</a> <span class="d">♦</span> <a href="#files">Птицы</a>
+</nav>
+
+<hr>
+
+<section id="news">
+<h2><u>Новости дня</u></h2>
+<div class="news">
+  <h3>В РЕЕСТРЕ ООН НЕ ХВАТАЕТ ЛЮДЕЙ <span class="badge red blink">NEW</span></h3>
+  <p class="small" style="text-align:center">Сообщение ООН от 01.10.1967</p>
+  <p style="text-align:center"><span class="big">1 400 000</span></p>
+  <p>Пять стран. Пять переписей. Цифры не сходятся. ООН созывает чрезвычайную сессию, и к полуночи кто-то должен быть ВИНОВАТ. Им всё равно кто. Мне — НЕТ.</p>
+  <p>Официальная версия: «ошибка в подсчётах». Ха. Ха. Ха. Ошибки не забирают полтора миллиона людей.</p>
+</div>
+</section>
+
+<hr class="dots">
+
+<section id="files">
+<h2><u>Засекречено</u></h2>
+<ul class="files">
+  <li><b>♦</b><div><h3>Островов ФОБ не существует</h3> <span class="badge">ГОРЯЧО</span><p>Острова Бордии нарисованы на воде краской. Каждую весну их подкрашивают, поэтому в ФОБ весной так пахнет. Проверьте сами: подойдите к берегу и потрите его пальцем.</p></div></li>
+  <li><b>♦</b><div><h3>Генсек ООН — это три голубя в костюме</h3> <span class="badge red">ЛИЧНО ВИДЕЛ</span><p>Обратите внимание: Генсек никогда не ест на приёмах. Только клюёт. И всегда садится поближе к окну.</p></div></li>
+  <li><b>♦</b><div><h3>Горы СРГ полые. Внутри — Ухо</h3> <span class="badge red">!!!</span><p>Свободная Республика Гор стоит на ОДНОМ ГИГАНТСКОМ УХЕ. Оно слышит всё, что говорят на высоте больше 800 метров. Беженцы туда бегут, потому что там «безопасно». Безопасно для УХА.</p><p class="note">Ладно, ухо может и нет. Но откуда их учёные знают о каждом жителе всё? И почему реклама ФОБ знает, что мне нужны новые ботинки, если я сказал это только в горах?</p></div></li>
+  <li><b>♦</b><div><h3>Эже-Рузе существует только по вторникам</h3><p>Попробуйте позвонить в Эже-Рузе в среду. Никто не ответит. А во вторник ответят все сразу, и все очень счастливые.</p></div></li>
+  <li><b>♦</b><div><h3>Луна — прожектор ООН</h3><p>Луной светят на страны, которые не заплатили членский взнос. Новолуние — значит, все заплатили. Полнолуние — значит, кто-то должен.</p></div></li>
+  <li><b>♦</b><div><h3>В Долоре запрещена цифра 7</h3><p>Поэтому в неделе у них шесть дней, и они всё успевают. Седьмой день спрятан где-то под новым мостом.</p></div></li>
+  <li><b>♦</b><div><h3>Ли ТК — три ящерицы в пальто</h3> <span class="badge blink">РАССЛЕДУЮ</span><p>Агенты Ли ТК не спят, не едят и всегда носят одинаковые шляпы. Я уверен, что это три ящерицы в пальто. Возможно, четыре.</p></div></li>
+  <li><b>♦</b><div><h3>Птиц не существует</h3><p>Вы видели птенца голубя? Нет. Потому что их собирают на заводе. Голуби заряжаются на проводах и передают всё куда надо.</p></div></li>
+</ul>
+</section>
+
+<hr>
+
+<section id="gallery">
+<h2><u>Доказательства</u></h2>
+<p class="warn">(Осторожно — много картинок, будет долго грузиться)</p>
+<!-- ФОТОГРАФИИ: положите фото в папку photos рядом с этим файлом (01.jpg … 14.jpg).
+     Подпись меняйте прямо здесь: <b>заголовок</b>, после него — текст подписи.
+     Если фото нет, вместо него показывается заглушка «ЗАСЕКРЕЧЕНО». -->
+<div class="gallery">
+<figure class="photo"><div class="frame"><img src="photos/01.jpg" alt="Улика №1"></div><figcaption><b>Улика №1</b>Подпись к фото 1</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/02.jpg" alt="Улика №2"></div><figcaption><b>Улика №2</b>Подпись к фото 2</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/03.jpg" alt="Улика №3"></div><figcaption><b>Улика №3</b>Подпись к фото 3</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/04.jpg" alt="Улика №4"></div><figcaption><b>Улика №4</b>Подпись к фото 4</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/05.jpg" alt="Улика №5"></div><figcaption><b>Улика №5</b>Подпись к фото 5</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/06.jpg" alt="Улика №6"></div><figcaption><b>Улика №6</b>Подпись к фото 6</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/07.jpg" alt="Улика №7"></div><figcaption><b>Улика №7</b>Подпись к фото 7</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/08.jpg" alt="Улика №8"></div><figcaption><b>Улика №8</b>Подпись к фото 8</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/09.jpg" alt="Улика №9"></div><figcaption><b>Улика №9</b>Подпись к фото 9</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/10.jpg" alt="Улика №10"></div><figcaption><b>Улика №10</b>Подпись к фото 10</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/11.jpg" alt="Улика №11"></div><figcaption><b>Улика №11</b>Подпись к фото 11</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/12.jpg" alt="Улика №12"></div><figcaption><b>Улика №12</b>Подпись к фото 12</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/13.jpg" alt="Улика №13"></div><figcaption><b>Улика №13</b>Подпись к фото 13</figcaption></figure>
+<figure class="photo"><div class="frame"><img src="photos/14.jpg" alt="Улика №14"></div><figcaption><b>Улика №14</b>Подпись к фото 14</figcaption></figure>
+</div>
+</section>
+
+<hr>
+
+<section id="rabbits">
+<h2><u>Архив ООН: зайцы</u></h2>
+<p class="warn">(Каждый, кто прошёл проверку, сдаёт зайца. Зайцы хранятся вечно.)</p>
+<div id="archive" class="archive" aria-live="polite"></div>
+<p id="archEmpty" class="arch-empty">Архив открывается<span class="blink">...</span></p>
+</section>
+
+<hr class="dots">
+
+<section id="blog">
+<h2><u>Дневник автора</u></h2>
+<p class="warn">(личное)</p>
+<div class="blog">
+  <article><p class="bd">06.10.1967 — 01:12</p><p>Опять всю ночь сидел за ресерчем. Глаза болят, но остановиться не могу. Поставил на сайт проверку от ботов — в последнее время слишком много странных посещений.</p></article>
+  <article><p class="bd">02.10.1967 — 23:47</p><p>ООН наконец объявила про перепись. Друзья пишут: «ты же говорил». Да, говорил. Мне от этого не радостно.</p></article>
+  <article><p class="bd">26.09.1967 — 03:20</p><p>Меня пугает то, что я нахожу. Чем глубже копаю в торговых таблицах, тем чаще вижу одного и того же посредника — во всех сделках, у всех стран. Пытался рассказать соседу. Он сказал, что я слишком много сижу дома. Может быть.</p></article>
+  <article><p class="bd">21.09.1967 — 19:05</p><p>Сделал томатный суп. Очень вкусный, судя по рецепту. Записываю, чтобы не забыть: томаты, чеснок, базилик, щепотка сахара. Завтра снова за таблицы.</p></article>
+  <article><p class="bd">14.09.1967 — 02:58</p><p>Всю ночь сидел за ресерчем. Сложил расхождения между национальными переписями и Реестром ООН — получилось около 1 400 000 человек. Об этом никто не пишет. Может, я ошибся? Перепроверю.</p></article>
+  <article><p class="bd">08.09.1967 — 22:30</p><p>Купил новую лампу на стол, теперь могу работать до утра. Мама говорит, что я похудел.</p></article>
+  <article><p class="bd">01.09.1967 — 21:10</p><p>Завёл дневник. Буду записывать сюда, что нашёл и что думаю. Если со мной что-нибудь случится — пусть хоть это останется.</p></article>
+  <p class="small">Комментарии отключены.</p>
+</div>
+</section>
+
+<hr class="dots">
+
+<section id="cipher">
+<h2><u>Дешифратор</u></h2>
+<div class="cipher">
+  <label for="cipherIn">Вставьте перехваченный текст (например, из приглашения):</label>
+  <textarea id="cipherIn" rows="3" spellcheck="false"></textarea>
+  <p style="margin:6px 0 0">Расшифровка:</p>
+  <div class="msg" id="msg" aria-live="polite"></div>
+  <div id="encBox" hidden>
+    <label for="encIn">Режим архивариуса — зашифровать текст:</label>
+    <textarea id="encIn" rows="3" spellcheck="false"></textarea>
+    <div class="msg" id="encOut"></div>
+  </div>
+</div>
+</section>
+
+<hr>
+
+<p>Вы посетитель номер</p>
+<div class="counter" id="counter" aria-label="Счётчик посетителей"></div>
+<p class="small">(настоящее число засекречено)</p>
+
+<p style="margin-top:18px">
+  <span class="btn88" style="background:#ffd400">Никому<br>не верь<br>♦♦♦</span>
+  <span class="btn88" style="background:#39ff14">Лучше всего<br>на ламповом<br>терминале</span>
+  <span class="btn88" style="background:#00ffff">Фольга<br>проверена<br>1967</span>
+  <span class="btn88" style="background:#ff3cf2">Они<br>смотрят<br>👁</span>
+</p>
+
+<p class="back"><a href="#top">Ой-ой! Верните меня наверх.....</a></p>
+<button class="rocket" id="rocket" type="button" aria-label="Ракета Сатурн-5"><img id="rocketImg" src="photos/rocket.png" alt=""></button>
+<p class="small">Сайт в разработке. Сайт всегда будет в разработке.</p>
+
+</div>
+
+<script>
+(function(){
+  /* --- дешифратор (шифр Цезаря, русский алфавит из 33 букв с Ё) --- */
+  var AB="АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ", ab=AB.toLowerCase(), N=AB.length;
+  function rot(s,n){return s.replace(/[А-ЯЁа-яё]/g,function(c){
+    var i=AB.indexOf(c); if(i>=0)return AB[(i+n+N*2)%N];
+    i=ab.indexOf(c); return ab[(i+n+N*2)%N];
+  })}
+  /* КЛЮЧ — сдвиг на 8 букв. Шифрование: +8, расшифровка: −8 */
+  var KEY=8;
+  var cipherIn=document.getElementById('cipherIn'),msg=document.getElementById('msg');
+  cipherIn.value=rot("ГОЛУБИ СЛЫШАТ ВСЁ. ГОВОРИТЕ ШЁПОТОМ.",KEY);
+  function draw(){msg.textContent=rot(cipherIn.value,-KEY)}
+  cipherIn.addEventListener('input',draw);draw();
+  var encBox=document.getElementById('encBox'),encIn=document.getElementById('encIn'),encOut=document.getElementById('encOut');
+  function encDraw(){encOut.textContent=rot(encIn.value,KEY)}
+  encIn.addEventListener('input',encDraw);
+  function archivist(){encBox.hidden=location.hash!=='#archivist'}
+  window.addEventListener('hashchange',archivist);archivist();
+
+  /* --- глаз: 3 нажатия — закрывается --- */
+  var eyeBtn=document.getElementById('eyeBtn'),irisG=document.getElementById('irisG'),eyeHits=0,eyeShut=false;
+  document.addEventListener('pointermove',function(e){
+    if(eyeShut)return;
+    var r=eyeBtn.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),d=Math.hypot(dx,dy)||1;
+    irisG.setAttribute('transform','translate('+(dx/d*9).toFixed(1)+','+(dy/d*5).toFixed(1)+')');
+  });
+  eyeBtn.addEventListener('click',function(){
+    if(eyeShut)return;
+    eyeHits++;
+    if(eyeHits<3){eyeBtn.classList.add('blink1');setTimeout(function(){eyeBtn.classList.remove('blink1')},160);return}
+    eyeShut=true;eyeHits=0;eyeBtn.classList.add('shut');
+    document.body.classList.add('dark');
+    document.getElementById('unwatched').hidden=false;
+    setTimeout(function(){
+      var w=document.createElement('div');w.className='whisper';w.textContent='Не волнуйтесь. Я всё равно вас вижу.';
+      document.body.appendChild(w);setTimeout(function(){w.remove()},4100);
+    },2500);
+    setTimeout(function(){
+      eyeBtn.classList.remove('shut');document.body.classList.remove('dark');
+      document.getElementById('unwatched').hidden=true;eyeShut=false;
+    },7500);
+  });
+
+  /* --- ракета ---
+     Дизайны чередуются после каждой постройки: photos/rocket.png, rocket2.png, rocket3.png
+     (вырезки с прозрачным фоном). Если файла нет — рисованная ракета.
+     Взрыв → леса и рабочие 30 секунд строят заново → после 5-го взрыва плакат «больше не строим». */
+  var ROCKETS=[
+    {file:'photos/rocket.png', svg:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 220"><line x1="20" y1="0" x2="20" y2="20" stroke="#b33" stroke-width="1.6"/><rect x="18.5" y="10" width="3" height="6" fill="#ddd"/><polygon points="14,31 26,31 20,19" fill="#d9d9d9"/><rect x="14" y="31" width="12" height="9" fill="#bdbdbd"/><polygon points="14,40 26,40 27,54 13,54" fill="#eee"/><rect x="13" y="54" width="14" height="34" fill="#f3f3f3"/><rect x="13" y="54" width="7" height="6" fill="#111"/><rect x="13" y="70" width="14" height="3" fill="#111"/><polygon points="13,88 27,88 29,94 11,94" fill="#e6e6e6"/><rect x="11" y="94" width="18" height="48" fill="#f5f5f5"/><rect x="11" y="94" width="18" height="3" fill="#111"/><rect x="11" y="142" width="18" height="6" fill="#222"/><rect x="11" y="148" width="18" height="56" fill="#f7f7f7"/><rect x="11" y="150" width="4.5" height="20" fill="#111"/><rect x="20" y="150" width="4.5" height="20" fill="#111"/><rect x="15.5" y="182" width="4.5" height="20" fill="#111"/><rect x="24.5" y="182" width="4.5" height="20" fill="#111"/><polygon points="11,194 5,212 11,206" fill="#111"/><polygon points="29,194 35,212 29,206" fill="#111"/><rect x="13" y="204" width="14" height="7" fill="#555"/></svg>')},
+    {file:'photos/rocket2.png',svg:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 220"><line x1="20" y1="0" x2="20" y2="18" stroke="#999" stroke-width="1.6"/><polygon points="16,32 24,32 20,16" fill="#e8e8e8"/><rect x="16" y="32" width="8" height="26" fill="#f0f0f0"/><rect x="16" y="44" width="8" height="2" fill="#777"/><polygon points="16,58 24,58 26,64 14,64" fill="#888"/><polygon points="14,64 26,64 29,112 11,112" fill="#ededed"/><rect x="12" y="86" width="16" height="2" fill="#999"/><polygon points="11,112 29,112 30,118 10,118" fill="#666"/><polygon points="10,118 30,118 36,196 4,196" fill="#f2f2f2"/><polygon points="9,140 31,140 31.6,146 8.4,146" fill="#aaa"/><polygon points="7,170 33,170 33.6,176 6.4,176" fill="#aaa"/><rect x="4" y="196" width="32" height="10" fill="#777"/><rect x="6" y="206" width="4" height="6" fill="#444"/><rect x="13" y="206" width="4" height="6" fill="#444"/><rect x="23" y="206" width="4" height="6" fill="#444"/><rect x="30" y="206" width="4" height="6" fill="#444"/></svg>')},
+    {file:'photos/rocket3.png',svg:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 220"><polygon points="17,40 23,40 20,22" fill="#cfd6c4"/><rect x="17" y="40" width="6" height="34" fill="#dfe5d6"/><rect x="17" y="58" width="6" height="2" fill="#555"/><rect x="18" y="74" width="4" height="6" fill="#777"/><rect x="16" y="80" width="8" height="126" fill="#e3e8db"/><rect x="16" y="120" width="8" height="2" fill="#666"/><polygon points="16,104 7,192 7,206 16,206" fill="#d2d9c7"/><polygon points="24,104 33,192 33,206 24,206" fill="#d2d9c7"/><polygon points="16,104 13,150 16,150" fill="#aab39e"/><polygon points="24,104 27,150 24,150" fill="#aab39e"/><rect x="7" y="206" width="5" height="6" fill="#444"/><rect x="17" y="206" width="6" height="6" fill="#444"/><rect x="28" y="206" width="5" height="6" fill="#444"/></svg>')}
+  ];
+  var rocket=document.getElementById('rocket'),rocketImg=document.getElementById('rocketImg'),boomBusy=false,design=0,booms=0,BUILD_MS=30000;
+  document.body.appendChild(rocket);
+  function rocketFallback(){var d=ROCKETS[design];if(rocketImg.getAttribute('src')!==d.svg)rocketImg.src=d.svg}
+  rocketImg.addEventListener('error',rocketFallback);
+  function setDesign(i){design=i%ROCKETS.length;rocketImg.src=ROCKETS[design].file}
+  if(rocketImg.complete&&rocketImg.naturalWidth===0)rocketFallback();
+
+  function rebuild(r){
+    setDesign(design+1);
+    var sc=document.createElement('div');sc.className='scaff';
+    sc.style.cssText='left:'+(r.left-12)+'px;top:'+(r.top-14)+'px;width:'+(r.width+24)+'px;height:'+(r.height+18)+'px';
+    sc.innerHTML='<span class="sign">СТРОИМ</span><span class="cnt"></span>'+
+      '<span class="w w1">👷</span><span class="w w2">👷</span><span class="w w3">👷</span><span class="w w4">👷‍♀️</span>';
+    document.body.appendChild(sc);
+    var cnt=sc.querySelector('.cnt'),t0=Date.now();
+    rocketImg.style.transition='none';rocketImg.style.clipPath='inset(100% 0 0 0)';
+    rocket.classList.remove('gone');
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      rocketImg.style.transition='clip-path '+BUILD_MS+'ms steps(12)';rocketImg.style.clipPath='inset(0 0 0 0)';
+    })});
+    var tick=setInterval(function(){
+      var left=Math.max(0,Math.ceil((BUILD_MS-(Date.now()-t0))/1000));cnt.textContent=left+' с';
+      if(left<=0){clearInterval(tick);sc.remove();rocketImg.style.transition='';rocketImg.style.clipPath='';boomBusy=false}
+    },250);
+  }
+  function noMore(r){
+    var p=document.createElement('div');p.className='nomore';
+    p.innerHTML='<b>ВНИМАНИЕ</b>После пяти аварий программа закрыта.<br><big>БОЛЬШЕ НЕ СТРОИМ</big><small>Комиссия ООН по космосу</small>';
+    document.body.appendChild(p);
+  }
+
+  rocket.addEventListener('click',function(){
+    if(boomBusy)return;boomBusy=true;booms++;
+    var r=rocketImg.getBoundingClientRect(),src=rocketImg.currentSrc||rocketImg.src;
+    rocket.classList.remove('back');rocket.classList.add('gone');
+    var cx=r.left+r.width/2,cy=r.top+r.height/2;
+    var after=function(){if(booms>=5)noMore(r);else rebuild(r)};
+    if(calm){setTimeout(after,800);return}
+    var bm=document.createElement('div');bm.className='boom';bm.style.left=cx+'px';bm.style.top=cy+'px';document.body.appendChild(bm);setTimeout(function(){bm.remove()},800);
+    var cols=3,rows=10,pw=r.width/cols,ph=r.height/rows,parts=[];
+    for(var j=0;j<rows;j++)for(var c=0;c<cols;c++){
+      var f=document.createElement('div');f.className='frag';
+      f.style.cssText+='left:'+(r.left+c*pw)+'px;top:'+(r.top+j*ph)+'px;width:'+(pw+0.5)+'px;height:'+(ph+0.5)+'px;background-image:url("'+src+'");background-size:'+r.width+'px '+r.height+'px;background-position:'+(-c*pw)+'px '+(-j*ph)+'px';
+      document.body.appendChild(f);
+      var px=r.left+c*pw+pw/2,py=r.top+j*ph+ph/2;
+      parts.push({el:f,x:0,y:0,vx:(px-cx)/r.width*18+rnd(-6,6),vy:(py-cy)/r.height*10+rnd(-16,-5),r:0,vr:rnd(-28,28)});
+    }
+    for(var k=0;k<22;k++){
+      var sp=document.createElement('div');sp.className='spark';sp.style.left=cx+'px';sp.style.top=cy+'px';document.body.appendChild(sp);
+      parts.push({el:sp,x:0,y:0,vx:rnd(-14,14),vy:rnd(-18,4),r:0,vr:0,spark:true});
+    }
+    var t0=performance.now(),ms=2600;
+    (function step(now){
+      var t=now-t0,fade=Math.max(0,Math.min(1,(ms-t)/700));
+      parts.forEach(function(o){
+        o.vy+=.55;o.vx*=.99;o.x+=o.vx;o.y+=o.vy;o.r+=o.vr;
+        o.el.style.transform='translate('+o.x+'px,'+o.y+'px) rotate('+o.r+'deg)';
+        o.el.style.opacity=o.spark?fade*Math.random():fade;
+      });
+      if(t<ms)requestAnimationFrame(step);
+      else{parts.forEach(function(o){o.el.remove()});setTimeout(after,600)}
+    })(t0);
+  });
+
+  /* --- фото: если файла нет, показываем заглушку --- */
+  document.querySelectorAll('.photo img').forEach(function(img){
+    function miss(){img.closest('.photo').classList.add('missing')}
+    img.addEventListener('error',miss);
+    if(img.complete&&img.naturalWidth===0)miss();
+  });
+
+  /* --- счётчик --- */
+  var c=document.getElementById('counter'),num=String(1400000+Math.floor(Math.random()*999)).padStart(7,'0');
+  c.innerHTML=num.split('').map(function(d){return '<span>'+d+'</span>'}).join('');
+
+  /* --- капча --- */
+  var gate=document.getElementById('gate'),err=document.getElementById('err'),stepN=document.getElementById('stepN');
+  /* шаги: 1 галочка, 2 птицы, 3 «какой это шаг» (ответ 8), 4 рисунок зайца.
+     В шапке номер шага врёт специально: 1, 2, потом сразу 8, потом 9 — «из 3» */
+  var S=[null,'s1','s2','sCount','s3'].map(function(id){return id&&document.getElementById(id)});
+  var SHOWN=[0,1,2,8,9],stepT=document.getElementById('stepT');
+  function rnd(a,b){return a+Math.random()*(b-a)}
+
+  function show(n,msgText){
+    for(var i=1;i<S.length;i++)S[i].hidden=i!==n;
+    stepN.textContent=SHOWN[n];stepT.textContent=3;
+    if(msgText){err.textContent=msgText;err.hidden=false}else{err.hidden=true}
+    if(n===2){buildGrid()}
+    if(n===3){resetTaps()}
+    if(n===4){clearPad()}
+  }
+
+  /* шаг 1: галочка убегает */
+  var notArb=document.getElementById('notArb'),chkL=document.querySelector('.chk'),sc=document.getElementById('scan'),dodges=0;
+  var DODGE=['Вы кликнули за 0,2 секунды. Люди так быстро не кликают. Ещё раз.','Теперь слишком медленно. Тоже подозрительно. Ещё раз.'];
+  notArb.addEventListener('click',function(e){
+    if(dodges>=2)return;
+    e.preventDefault();
+    chkL.style.transform='translate('+rnd(-60,60)+'px,'+rnd(-6,30)+'px) rotate('+rnd(-9,9)+'deg)';
+    sc.hidden=false;sc.textContent=DODGE[dodges];dodges++;
+  });
+  notArb.addEventListener('change',function(e){
+    if(!e.target.checked)return;
+    err.hidden=true;chkL.style.transform='';
+    sc.hidden=false;sc.innerHTML='Анализ души<span class="blink">...</span>';
+    setTimeout(function(){sc.textContent='Душа обнаружена. Маленькая, но есть.'},1100);
+    setTimeout(function(){show(2)},2300);
+  });
+
+  /* шаг 3: «какой это шаг по счёту» — отстучать по зайцу 8 раз */
+  var taps=0,hare=document.getElementById('tapHare'),countMsg=document.getElementById('countMsg'),countBusy=false;
+  function resetTaps(){taps=0;countMsg.hidden=true}
+  hare.addEventListener('click',function(){
+    if(countBusy)return;
+    taps++;
+    hare.classList.remove('bonk');void hare.offsetWidth;hare.classList.add('bonk');
+  });
+  document.getElementById('countReset').addEventListener('click',function(){err.hidden=true;resetTaps()});
+  document.getElementById('countOk').addEventListener('click',function(){
+    if(countBusy)return;
+    if(taps===8){
+      countBusy=true;err.hidden=true;countMsg.hidden=false;
+      countMsg.textContent='Верно. Шаги 3–7 засекречены. Вы их уже прошли, просто не помните.';
+      setTimeout(function(){countBusy=false;show(4)},2400);
+    }else if(taps===0){
+      show(3,'Глаз не моргнул ни разу. Так стучат машины.');
+    }else if(taps===3){
+      show(3,'«Из 3» — это не номер шага. Это обещание, которое мы не сдержали. Посмотрите наверх ещё раз.');
+    }else{
+      show(3,'Неверно. Глаз устал. Посмотрите наверх внимательнее.');
+    }
+  });
+  /* --- заяц --- */
+  var pad=document.getElementById('pad'),ctx=pad.getContext('2d'),drawing=false,last=null,strokes=0,len=0;
+  var verdict=document.getElementById('verdict');
+  function clearPad(){ctx.fillStyle='#fff';ctx.fillRect(0,0,pad.width,pad.height);strokes=0;len=0;verdict.hidden=true}
+  function pos(e){var r=pad.getBoundingClientRect();return{x:(e.clientX-r.left)*pad.width/r.width,y:(e.clientY-r.top)*pad.height/r.height}}
+  pad.addEventListener('pointerdown',function(e){drawing=true;last=pos(e);strokes++;try{pad.setPointerCapture(e.pointerId)}catch(x){}});
+  pad.addEventListener('pointermove',function(e){
+    if(!drawing)return;var p=pos(e);
+    ctx.strokeStyle='#111';ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();
+    len+=Math.hypot(p.x-last.x,p.y-last.y);last=p;
+  });
+  ['pointerup','pointercancel','pointerleave'].forEach(function(t){pad.addEventListener(t,function(){drawing=false})});
+  document.getElementById('rabbitClear').addEventListener('click',clearPad);
+  var checking=false,okBtn=document.getElementById('rabbitOk');
+  /* --- летающие зайцы --- */
+  var calm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function fly(src,count,ms,done){
+    if(calm){done&&done();return}
+    var W=innerWidth,H=innerHeight,items=[],t0=performance.now();
+    for(var i=0;i<count;i++){
+      var im=document.createElement('img');im.src=src;im.alt='';im.className='flyer';
+      var sz=90+Math.random()*170;im.style.width=sz+'px';
+      document.body.appendChild(im);
+      items.push({el:im,w:sz,h:sz*.63,x:Math.random()*(W-sz),y:Math.random()*(H-sz*.63),
+        vx:(Math.random()<.5?-1:1)*(4+Math.random()*9),vy:(Math.random()<.5?-1:1)*(4+Math.random()*9),
+        r:Math.random()*360,vr:(Math.random()-.5)*30,hue:Math.random()*360,ph:Math.random()*6});
+    }
+    (function step(now){
+      var t=now-t0;
+      items.forEach(function(o){
+        o.x+=o.vx;o.y+=o.vy;o.r+=o.vr;o.hue+=12;
+        if(o.x<0||o.x>W-o.w){o.vx*=-1.08;o.x=Math.max(0,Math.min(W-o.w,o.x))}
+        if(o.y<0||o.y>H-o.h){o.vy*=-1.08;o.y=Math.max(0,Math.min(H-o.h,o.y))}
+        var s=1+.35*Math.sin(t/90+o.ph);
+        o.el.style.transform='translate('+o.x+'px,'+o.y+'px) rotate('+o.r+'deg) scale('+s+','+(2-s)+')';
+        o.el.style.filter='hue-rotate('+o.hue+'deg) invert('+(Math.sin(t/60+o.ph)>.6?1:0)+')';
+      });
+      if(t<ms)requestAnimationFrame(step);
+      else{items.forEach(function(o){o.el.remove()});done&&done()}
+    })(t0);
+  }
+  function wander(src){
+    if(calm)return;
+    var im=document.createElement('img');im.src=src;im.alt='';im.className='flyer';
+    var sz=110+Math.random()*90,W=innerWidth,H=innerHeight,ltr=Math.random()<.5,y0=Math.random()*(H-sz),t0=performance.now(),ms=7000;
+    im.style.width=sz+'px';document.body.appendChild(im);
+    (function step(now){
+      var p=(now-t0)/ms,x=ltr?-sz+p*(W+sz*2):W+sz-p*(W+sz*2),y=y0+Math.sin(p*14)*60;
+      im.style.transform='translate('+x+'px,'+y+'px) rotate('+(p*1080*(ltr?1:-1))+'deg)';
+      if(p<1)requestAnimationFrame(step);else im.remove();
+    })(t0);
+  }
+
+  okBtn.addEventListener('click',function(){
+    if(checking)return;
+    if(len<40){okBtn.animate&&okBtn.animate([{transform:'translateX(0)'},{transform:'translateX(-10px)'},{transform:'translateX(10px)'},{transform:'translateX(0)'}],{duration:250,iterations:2});return}
+    checking=true;okBtn.disabled=true;err.hidden=true;
+    var src=pad.toDataURL('image/png');
+    var score=20+Math.floor(Math.random()*79);
+    var note=len>6000?'Это не заяц, это паника. Но паника — очень человеческое чувство.':GOOD[Math.floor(Math.random()*GOOD.length)];
+    var reject=rejects<2&&Math.random()<.35;
+    verdict.hidden=false;
+    verdict.innerHTML='Комиссия ООН изучает зайца<span class="blink">...</span>';
+    if(reject){
+      rejects++;
+      setTimeout(function(){
+        verdict.textContent='Заячность: '+Math.floor(Math.random()*15)+'%. '+BAD[Math.floor(Math.random()*BAD.length)];
+        setTimeout(function(){var v=verdict.textContent;clearPad();verdict.textContent=v;verdict.hidden=false;checking=false;okBtn.disabled=false},1800);
+      },1500);
+      return;
+    }
+    rejects=0;
+    setTimeout(function(){
+      verdict.textContent='Заячность: '+score+'%. '+note;
+      saveRabbit(score,note);
+      setTimeout(function(){
+        fly(src,9,4200,function(){gate.hidden=true;window.scrollTo(0,0);checking=false;okBtn.disabled=false});
+      },2600);
+    },1500);
+  });
+  var rejects=0;
+  var BAD=[
+    'Это не заяц. Это Арбитр, притворяющийся зайцем. Отказано. Нарисуйте заново.',
+    'Заяц слишком идеальный. Так рисуют машины. Ещё раз.',
+    'Комиссия ООН не принимает зайцев без печати. Нарисуйте заново.',
+    'У этого зайца шесть пальцев. Псевдозаяц. Отказано.',
+    'Заяц подал в отставку. Нарисуйте нового.',
+    'Заяц подозревается в связях с Ли ТК. Нарисуйте другого.'
+  ];
+  var GOOD=[
+    'Это не заяц. Это картошка с ушами. Но рисовал явно человек.',
+    'Зато сходство с человеческим рисунком: 100%.',
+    'Арбитр нарисовал бы идеального зайца. Ваш ужасен. Добро пожаловать.',
+    'Заяц выглядит испуганным. Как и все люди в 1967 году.',
+    'Мы показали вашего зайца трём экспертам. Один заплакал.',
+    'Комиссия ООН совещалась 40 минут. Решено считать это зайцем.',
+    'У зайца подозрительный взгляд. Он нам нравится.'
+  ];
+
+  /* --- архив зайцев (общий для всех) --- */
+  var DB=null,isAdmin=false;
+  var archive=document.getElementById('archive'),archEmpty=document.getElementById('archEmpty');
+  function archMsg(t){archEmpty.textContent=t;archEmpty.hidden=false}
+  /* Два режима: на claude.ai — общий архив (db); на своём хостинге — архив этого браузера (localStorage) */
+  var LOCAL_KEY='un-rabbit-archive';
+  function loadLocal(){try{return JSON.parse(localStorage.getItem(LOCAL_KEY)||'[]')}catch(e){return []}}
+  function storeLocal(list){try{localStorage.setItem(LOCAL_KEY,JSON.stringify(list));return true}catch(e){return false}}
+  function localSnap(){
+    var list=loadLocal().sort(function(a,b){return b.ts-a.ts});
+    return {empty:!list.length,size:list.length,docs:list.map(function(r){return{id:r.id,data:function(){return r}}})};
+  }
+  function saveRabbit(score,note){
+    var small=document.createElement('canvas');small.width=190;small.height=120;
+    var sc=small.getContext('2d');sc.fillStyle='#fff';sc.fillRect(0,0,190,120);sc.drawImage(pad,0,0,190,120);
+    var rec={img:small.toDataURL('image/png'),nation:document.getElementById('nation').value,score:score,verdict:note,ts:Date.now()};
+    if(DB){return DB.collection('rabbits').add(rec).then(function(){return true},function(){return false})}
+    rec.id='r'+rec.ts;
+    var list=loadLocal();list.push(rec);
+    while(list.length>150)list.shift();
+    var ok=storeLocal(list);render(localSnap());
+    return Promise.resolve(ok);
+  }
+  function killRabbit(id){
+    if(DB)return DB.doc('rabbits/'+id).delete();
+    storeLocal(loadLocal().filter(function(r){return r.id!==id}));render(localSnap());
+    return Promise.resolve();
+  }
+  function render(snap){
+    archive.innerHTML='';
+    if(snap.empty){archMsg('Архив пуст. Пройдите проверку наверху, чтобы сдать первого зайца.');return}
+    archEmpty.hidden=true;
+    var total=snap.size;
+    snap.docs.forEach(function(d,i){
+      var r=d.data()||{};
+      if(typeof r.img!=='string'||r.img.indexOf('data:image/')!==0)return;
+      var f=document.createElement('figure');f.className='rab';
+      var img=document.createElement('img');img.src=r.img;img.alt='Заяц, нарисованный гостем';
+      var st=document.createElement('span');st.className='stampm';st.textContent=['ПРИНЯТ','ПОДОЗРИТЕЛЕН','ЧЕЛОВЕК','?!'][i%4];
+      var cap=document.createElement('figcaption');
+      var b=document.createElement('b');b.textContent='Экспонат №'+(total-i);
+      var t=document.createElement('div');t.textContent='Делегация: '+(r.nation||'неизвестна');
+      cap.appendChild(b);cap.appendChild(t);
+      if(typeof r.score==='number'){var z=document.createElement('div');z.textContent='Заячность: '+r.score+'%';cap.appendChild(z)}
+      if(typeof r.verdict==='string'&&r.verdict){var q=document.createElement('i');q.textContent='«'+r.verdict+'»';cap.appendChild(q)}
+      f.appendChild(img);f.appendChild(st);f.appendChild(cap);
+      if(isAdmin){
+        var k=document.createElement('button');k.type='button';k.className='kill';k.textContent='уничтожить улику';
+        k.addEventListener('click',function(){k.disabled=true;d.id&&killRabbit(d.id).catch(function(){k.disabled=false})});
+        cap.appendChild(k);
+      }
+      archive.appendChild(f);
+    });
+  }
+  /* на своём хостинге кнопка «уничтожить улику» видна только по адресу с #archivist */
+  function goLocal(){DB=null;isAdmin=location.hash==='#archivist';render(localSnap())}
+  (async function(){
+    try{
+      if(!window.claude||!window.claude.use){goLocal();return}
+      DB=await window.claude.use('db');
+      if(!DB){goLocal();return}
+      var U=await window.claude.use('user');
+      if(U){try{isAdmin=await U.canEdit()}catch(e){}}
+      DB.collection('rabbits').orderBy('ts','desc').limit(300).onSnapshot(render,function(){archMsg('Связь с архивом потеряна. Это они.')});
+    }catch(e){goLocal()}
+  })();
+  /* время от времени по сайту пролетает случайный заяц из архива */
+  setInterval(function(){
+    if(!gate.hidden||document.hidden)return;
+    var imgs=archive.querySelectorAll('.rab img');
+    if(!imgs.length)return;
+    wander(imgs[Math.floor(Math.random()*imgs.length)].src);
+  },18000);
+
+  var BIRDS=['🐦','🕊️','🦆','🦉','🐧','🦅','🐓','🦜','🐤'];
+  var grid=document.getElementById('grid'),fails=0;
+  function buildGrid(){
+    grid.innerHTML='';
+    BIRDS.slice().sort(function(){return Math.random()-.5}).forEach(function(b){
+      var t=document.createElement('button');t.type='button';t.className='tile';t.textContent=b;t.setAttribute('aria-pressed','false');
+      t.addEventListener('click',function(){t.setAttribute('aria-pressed',t.getAttribute('aria-pressed')==='true'?'false':'true')});
+      grid.appendChild(t);
+    });
+  }
+  document.getElementById('birdsOk').addEventListener('click',function(){
+    var picked=grid.querySelectorAll('[aria-pressed="true"]').length;
+    if(picked>0){
+      fails++;
+      document.getElementById('hint').hidden=false;
+      show(2,'Ошибка. Птиц не существует. Это знает каждый человек.');
+    }else{show(3)}
+  });
+
+})();
+</script>
+</body>
+</html>
