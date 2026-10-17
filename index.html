@@ -61,10 +61,17 @@ h1{font-family:var(--loud);font-weight:400;font-size:clamp(34px,8vw,64px);line-h
 @keyframes whisper{0%{opacity:0}15%{opacity:1}80%{opacity:1}100%{opacity:0}}
 body.dark .wrap{filter:grayscale(1) brightness(.55);transition:filter 1s}
 .wrap{transition:filter 1s}
-.rocket{position:fixed;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:40;background:none;border:0;padding:0;cursor:pointer;line-height:0}
-.rocket img{display:block;height:min(170px,26vh);width:auto;max-width:none;filter:drop-shadow(0 0 4px #0008)}
+.launch{position:fixed;right:8px;bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;align-items:flex-end;gap:0;--rh:clamp(150px,34vh,290px);pointer-events:none}
+@media (max-width:600px){.launch{--rh:clamp(100px,20vh,170px)}}
+.launch .tower{height:calc(var(--rh) * 1.08);width:auto;display:block;margin-right:-4px}
+.launch .base{position:absolute;left:-6px;right:-6px;bottom:-6px;height:10px;background:linear-gradient(#5a5a66,#2c2c34);border-top:2px solid #888}
+.rocket{position:relative;background:none;border:0;padding:0;cursor:pointer;line-height:0;pointer-events:auto}
+.rocket img{display:block;height:var(--rh);width:auto;max-width:none;filter:drop-shadow(0 0 6px #ff7a0055)}
+.rocket:hover img{animation:shake .12s linear infinite}
+@keyframes shake{25%{transform:translate(1px,-1px)}75%{transform:translate(-1px,1px)}}
 .rocket.gone{visibility:hidden}
-.rocket.back{animation:rback .8s ease}
+.vapor{position:fixed;z-index:39;width:22px;height:22px;border-radius:50%;background:radial-gradient(#fff,#ccd0 70%);pointer-events:none;animation:vapor 2.4s ease-out forwards}
+@keyframes vapor{to{transform:translate(var(--dx),-30px) scale(3.2);opacity:0}}
 @keyframes rback{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
 .scaff{position:fixed;z-index:41;pointer-events:none;
   background:
@@ -73,18 +80,157 @@ body.dark .wrap{filter:grayscale(1) brightness(.55);transition:filter 1s}
   border-left:3px solid #a0703a;border-right:3px solid #a0703a}
 .scaff .sign{position:absolute;top:-22px;left:50%;transform:translateX(-50%) rotate(-4deg);background:var(--yolk);color:#000;font:700 10px var(--mono);padding:2px 5px;border:2px solid #000;white-space:nowrap}
 .scaff .cnt{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);color:var(--yolk);font:700 12px var(--mono);white-space:nowrap}
-.scaff .w{position:absolute;font-size:18px;line-height:1}
-.scaff .w1{left:-6px;animation:climb 4s ease-in-out infinite alternate}
-.scaff .w2{right:-6px;animation:climb 5.5s ease-in-out infinite alternate-reverse}
-.scaff .w3{top:40%;animation:walk 3s ease-in-out infinite alternate}
-.scaff .w4{top:75%;left:30%;animation:hammer .35s ease-in-out infinite alternate}
-@keyframes climb{from{top:85%}to{top:0}}
-@keyframes walk{from{left:0}to{left:calc(100% - 18px)}}
-@keyframes hammer{from{transform:rotate(-15deg)}to{transform:rotate(15deg) translateY(-3px)}}
+.scaff .w{position:absolute;width:24px;height:36px;pointer-events:auto;cursor:pointer;line-height:0}
+.scaff .w svg{width:24px;height:36px;display:block;overflow:visible}
+.scaff .w1{left:-12px;animation:climb 4s ease-in-out infinite alternate}
+.scaff .w2{right:-12px;animation:climb 5.5s ease-in-out infinite alternate-reverse}
+.scaff .w3{top:38%;animation:walk 3.2s ease-in-out infinite alternate}
+.scaff .w4{top:70%;left:20%}
+.scaff .w5{top:12%;left:40%;animation:walk 4.4s ease-in-out infinite alternate-reverse}
+@keyframes climb{from{top:82%}to{top:-2%}}
+@keyframes walk{from{left:-4px}to{left:calc(100% - 20px)}}
+.wk .arm,.wk .leg{transform-box:view-box}
+.wk .arm.l{transform-origin:9px 14px}.wk .arm.r{transform-origin:15px 14px}
+.wk .leg.l,.wk .leg.r{transform-origin:12px 22px}
+.w1 .arm.l,.w2 .arm.l{animation:swing .45s ease-in-out infinite alternate}
+.w1 .arm.r,.w2 .arm.r{animation:swing .45s ease-in-out infinite alternate-reverse}
+.w1 .leg.l,.w2 .leg.l,.w3 .leg.l,.w5 .leg.l{animation:swing .5s ease-in-out infinite alternate-reverse}
+.w1 .leg.r,.w2 .leg.r,.w3 .leg.r,.w5 .leg.r{animation:swing .5s ease-in-out infinite alternate}
+.w4 .arm.r{animation:hammer .3s ease-in-out infinite alternate}
+.w3 .arm.r,.w5 .arm.r{animation:swing .6s ease-in-out infinite alternate}
+@keyframes swing{from{transform:rotate(-28deg)}to{transform:rotate(28deg)}}
+@keyframes hammer{from{transform:rotate(-70deg)}to{transform:rotate(25deg)}}
+.wfall{position:fixed;z-index:86;width:24px;height:36px;pointer-events:none;line-height:0}
+.wfall svg{width:24px;height:36px;overflow:visible}
+.wfall .arm,.wfall .leg{animation:flail .12s linear infinite alternate!important}
+@keyframes flail{from{transform:rotate(-60deg)}to{transform:rotate(60deg)}}
+.yell{position:fixed;z-index:87;pointer-events:none;font:700 13px var(--mono);color:#fff;background:#000;border:2px solid #fff;padding:1px 5px;border-radius:8px;white-space:nowrap}
+.scaff .loss{position:absolute;top:-40px;left:50%;transform:translateX(-50%);font:700 9px var(--mono);color:var(--alarm);white-space:nowrap;background:#000a;padding:1px 3px}
 .nomore{position:fixed;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:40;width:150px;background:#f3e6c4;color:#7a0000;border:4px double #7a0000;padding:8px;font:12px/1.3 var(--serif);text-align:center;transform:rotate(-5deg);box-shadow:4px 4px 0 #0008}
 .nomore b{display:block;font:700 12px var(--mono);letter-spacing:.15em}
 .nomore big{display:block;font:700 19px/1.05 var(--loud);margin:4px 0;color:#c00}
 .nomore small{display:block;font-size:10px;color:#555}
+
+/* ===== ХЭЛЛОУИН ===== */
+.wrap{position:relative}
+.wrap h2{color:#ff8c1a;text-shadow:2px 2px 0 #5b1a7a,0 0 12px #ff7a0066}
+.moon{position:fixed;top:24px;right:6%;width:84px;height:84px;border-radius:50%;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at 35% 35%,#fffbe0 0,#f5e7a8 45%,#d8c46e 100%);box-shadow:0 0 40px 12px #f5e7a855,0 0 120px 40px #ff7a0022}
+.moon::before,.moon::after{content:"";position:absolute;border-radius:50%;background:#cbb45e88}
+.moon::before{width:16px;height:16px;top:22px;left:44px}.moon::after{width:10px;height:10px;top:50px;left:24px}
+.fog{position:fixed;left:0;right:0;bottom:0;height:140px;z-index:-1;pointer-events:none;opacity:.55;
+  background:radial-gradient(ellipse 40% 60% at 20% 100%,#9b7bd655,transparent 70%),radial-gradient(ellipse 50% 70% at 70% 100%,#7a9bd644,transparent 70%);
+  animation:fog 14s ease-in-out infinite alternate}
+@keyframes fog{to{transform:translateX(6%)}}
+.web{position:absolute;top:0;z-index:2;pointer-events:none;image-rendering:pixelated;height:auto;max-width:none}
+.web.l{left:0;width:clamp(120px,22vw,300px)}.web.r{right:0;width:clamp(110px,20vw,270px)}
+.haha{position:fixed;z-index:88;pointer-events:none;font:700 18px var(--loud);color:#ff8c1a;text-shadow:2px 2px #000;animation:haha 1.2s ease-out forwards}
+@keyframes haha{to{transform:translateY(-50px) rotate(-10deg);opacity:0}}
+
+/* меню-органы (анатомический атлас) */
+.organs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 12px;padding:14px 4px 6px;max-width:640px;margin:0 auto}
+@media (max-width:480px){.organs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.organ{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:inherit!important;cursor:pointer;padding:8px 4px;border-radius:50% 50% 6px 6px;
+  background:radial-gradient(circle at 50% 42%,#3a2a3a 0,#1b1428 55%,transparent 72%)}
+.organ .org-svg{width:min(120px,100%);height:auto;overflow:visible;filter:drop-shadow(0 4px 6px #000a);transition:transform .25s}
+.organ:hover .org-svg,.organ:focus-visible .org-svg{transform:scale(1.07)}
+.organ .fig{font:italic 11px/1.2 var(--serif);color:#cdbf9d;margin-top:4px;text-align:center}
+.organ .sec{font:700 13px var(--serif);color:#f0e2bf;text-transform:uppercase;letter-spacing:.12em;margin-top:2px}
+.organ .lungs,.organ .heart,.organ .liver,.organ .kid{transform-box:fill-box}
+.organ .lungs{transform-origin:50% 0}
+.organ.cough .lungs{animation:cough .9s ease-out}
+@keyframes cough{0%{transform:scale(1)}12%{transform:scale(1.07,1.05)}24%{transform:scale(.86,.9)}40%{transform:scale(1.05,1.03)}55%{transform:scale(.88,.92)}75%{transform:scale(1.02)}100%{transform:scale(1)}}
+.organ .heart{transform-origin:50% 60%}
+.organ.beat .heart{animation:beat .9s ease-in-out}
+@keyframes beat{15%{transform:scale(1.12)}30%{transform:scale(.96)}45%{transform:scale(1.1)}60%{transform:scale(1)}}
+.organ .liver{transform-origin:50% 50%}
+.organ.jelly .liver{animation:jelly .8s}
+@keyframes jelly{20%{transform:scale(1.08,.92)}40%{transform:scale(.94,1.06)}60%{transform:scale(1.04,.97)}80%{transform:scale(.98,1.02)}}
+.organ .kid.l{transform-origin:70% 50%}.organ .kid.r{transform-origin:30% 50%}
+.organ.wiggle .kid.l{animation:kidw .25s ease-in-out 4 alternate}
+.organ.wiggle .kid.r{animation:kidw .25s ease-in-out 4 alternate-reverse}
+@keyframes kidw{from{transform:rotate(-9deg) translateY(-1px)}to{transform:rotate(9deg) translateY(1px)}}
+.blood{position:fixed;z-index:88;width:7px;height:10px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(circle at 35% 35%,#e0473d,#7a0c0c);pointer-events:none}
+.cough-puff{position:fixed;z-index:88;width:12px;height:12px;border-radius:50%;background:#e9e4f0;opacity:.85;pointer-events:none;animation:cpuff .9s ease-out forwards}
+@keyframes cpuff{to{transform:translate(var(--dx),-36px) scale(2.6);opacity:0}}
+.kxe{position:fixed;z-index:89;pointer-events:none;font:italic 700 15px var(--serif);color:#f0e2bf;text-shadow:1px 1px #000;animation:haha 1s ease-out forwards}
+/* органы в банках с формалином */
+.organs{gap:26px 14px!important}
+.organ{background:none!important;padding:14px 2px 4px!important}
+.jar{position:relative;display:block;width:min(128px,100%);aspect-ratio:3/4;margin:0 auto;border-radius:16px 16px 26px 26px/12px 12px 26px 26px;
+  background:linear-gradient(90deg,#ffffff1c,#ffffff06 28%,transparent 55%,#ffffff14 82%,#ffffff06);border:2px solid #d8ece955;
+  box-shadow:inset 0 -14px 24px #0006,inset 0 0 0 1px #ffffff10,0 10px 16px #000b;transition:transform .3s}
+.jar .lid{position:absolute;top:-11px;left:-5px;right:-5px;height:17px;border-radius:5px;background:linear-gradient(#a3a8b2,#5c616b 60%,#3c4049);box-shadow:inset 0 2px 0 #fff5,0 3px 4px #0008}
+.jar .lid::after{content:"";position:absolute;left:8%;right:8%;bottom:-5px;height:5px;background:#2c2f36;border-radius:0 0 3px 3px}
+.jar .liquid{position:absolute;left:3px;right:3px;bottom:3px;top:13%;border-radius:10px 10px 22px 22px;background:linear-gradient(#d9e3a033,#b7c96a66 40%,#8ea24a88);transition:background 1.2s}
+.jar .liquid::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;border-radius:50%;background:#e8f0b866}
+.jar .glass{position:absolute;top:10%;bottom:8%;left:12%;width:9%;border-radius:10px;background:linear-gradient(90deg,#fff0,#ffffff55,#fff0);pointer-events:none}
+.jar .org-svg{position:absolute!important;left:9%;top:20%;width:82%!important;filter:drop-shadow(0 3px 4px #0009) saturate(.9)!important;animation:floaty 5s ease-in-out infinite}
+.organ:nth-child(2) .org-svg{animation-delay:-1.2s}.organ:nth-child(3) .org-svg{animation-delay:-2.1s}.organ:nth-child(4) .org-svg{animation-delay:-3s}.organ:nth-child(5) .org-svg{animation-delay:-.6s}.organ:nth-child(6) .org-svg{animation-delay:-3.7s}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}}
+.organ:hover .org-svg,.organ:focus-visible .org-svg{transform:none}
+.organ:hover .jar,.organ:focus-visible .jar{transform:translateY(-4px) rotate(-1.5deg)}
+.jar .bub{position:absolute;bottom:6%;width:5px;height:5px;border-radius:50%;border:1px solid #f4ffd099;background:#ffffff22;animation:bub 4.5s linear infinite;opacity:0}
+@keyframes bub{0%{transform:translateY(0);opacity:0}10%{opacity:.9}85%{opacity:.7}100%{transform:translateY(-500%);opacity:0}}
+.jar.bloody .liquid{background:linear-gradient(#d9a0a044,#b8404088 40%,#7a1a1aaa)}
+.organ .tag{display:block;margin-top:10px;background:#efe6cf;color:#2a1d0e;border:1px solid #8a7444;padding:4px 8px 5px;box-shadow:2px 3px 0 #0006;transform:rotate(-1.5deg);text-align:center}
+.organ:nth-child(even) .tag{transform:rotate(1.5deg)}
+.organ .tag .fig{color:#5a4a30!important;margin:0!important;display:block;font-size:10.5px!important}
+.organ .tag .sec{color:#2a1d0e!important;display:block;margin:1px 0 0!important}
+@media (prefers-reduced-motion:reduce){.jar .org-svg,.jar .bub{animation:none}}
+/* тыкалки */
+.jig{animation:jig .4s}
+@keyframes jig{20%{transform:rotate(-2deg) scale(1.03)}40%{transform:rotate(2deg)}60%{transform:rotate(-1deg)}80%{transform:rotate(1deg)}}
+.spin1{animation:spin1 .6s}
+@keyframes spin1{to{transform:rotate(360deg)}}
+.badge{cursor:pointer}
+#title,.notice,.beware,.big,.counter,.btn88,.ticker,.wrap h2,.files li,.photo,.blog article,.rab,.moon{cursor:pointer}
+.moon{pointer-events:auto;z-index:1}
+@media (max-width:860px){.moon{z-index:-1;pointer-events:none}}
+.moon .meye{position:absolute;inset:18%;display:none}
+.moon.watch .meye{display:block}
+.moon.watch{background:radial-gradient(circle at 50% 50%,#fff 0,#f5e7a8 60%,#c9a94a 100%)}
+.beware span{display:inline-block;transition:transform .5s cubic-bezier(.3,1.8,.5,1)}
+.files li.red p{background:#000;color:#000;border-radius:2px}
+.files li.red h3::after{content:" [ЗАСЕКРЕЧЕНО]";color:var(--alarm);font:700 12px var(--mono)}
+.blog article{position:relative}
+.blog article.cup::after{content:"";position:absolute;right:10px;top:4px;width:58px;height:58px;border-radius:50%;border:5px solid #7a4a1e55;box-shadow:inset 0 0 6px #7a4a1e55;pointer-events:none;transform:rotate(20deg)}
+.rab.hop{animation:hop .6s}
+@keyframes hop{30%{transform:translateY(-22px) rotate(-6deg)}60%{transform:translateY(0)}75%{transform:translateY(-8px)}}
+.ticker.paused span{animation-play-state:paused}
+.lightbox{position:fixed;inset:0;z-index:90;background:#000d;display:grid;place-items:center;padding:16px;cursor:zoom-out}
+.lightbox figure{margin:0;max-width:min(92vw,900px);background:#c0c0c0;border:3px outset #eee;padding:8px;transform:rotate(-1deg)}
+.lightbox img{display:block;max-width:100%;max-height:78vh;width:auto;height:auto}
+.lightbox figcaption{font:14px var(--mono);color:#000;margin-top:6px}
+/* режимы кнопок 88×31 */
+.btn88{cursor:pointer;user-select:none}
+.btn88.on{border-style:inset;filter:brightness(.8);transform:translateY(1px)}
+body.crt .wrap,body.crt .launch{filter:grayscale(1) sepia(1) hue-rotate(70deg) saturate(7) brightness(1.05) contrast(1.2)}
+.crtlines{position:fixed;inset:0;z-index:80;pointer-events:none;display:none;background:repeating-linear-gradient(0deg,#0006 0 2px,transparent 2px 4px);box-shadow:inset 0 0 120px #000c}
+body.crt .crtlines{display:block;animation:crtflick .12s infinite}
+@keyframes crtflick{50%{opacity:.92}}
+.eyebtn{position:relative}
+body.tinfoil #eyeBtn svg{filter:grayscale(1) brightness(1.35) contrast(.85) drop-shadow(0 0 6px #fff)}
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:92;background:#000;color:var(--yolk);border:2px solid var(--yolk);font:700 14px var(--mono);padding:6px 12px;pointer-events:none;animation:toast 2.4s ease forwards;white-space:nowrap}
+@keyframes toast{0%{opacity:0;transform:translate(-50%,-10px)}10%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
+.watcher{position:fixed;z-index:70;width:46px;pointer-events:none;animation:wpop .3s ease-out}
+.watcher svg{width:100%;display:block}
+@keyframes wpop{from{transform:scale(0)}}
+.wrap section.folded>*:not(h2){display:none}
+.wrap section>h2::after{content:" ▾";font-size:.6em;opacity:.6}
+.wrap section.folded>h2::after{content:" ▸ (свёрнуто)"}
+/* летающие «гифки» */
+.sprite{position:fixed;z-index:60;left:0;top:0;cursor:pointer;line-height:0;will-change:transform}
+.bat svg{width:64px;height:32px;display:block}
+.bat .wg{transform-box:fill-box;animation:flap .18s ease-in-out infinite alternate}
+.bat .wg.l{transform-origin:100% 50%}.bat .wg.r{transform-origin:0 50%}
+@keyframes flap{from{transform:scaleY(1)}to{transform:scaleY(-.5)}}
+.ghost svg{width:56px;height:70px;display:block;opacity:.85;filter:drop-shadow(0 0 8px #fff8)}
+.spider{position:fixed;z-index:60;top:0;width:34px;cursor:pointer}
+.spider .thread{position:absolute;left:16px;top:0;width:1px;background:#ddd;opacity:.7}
+.spider svg{position:absolute;left:0;width:34px;height:30px}
+.pop{position:fixed;z-index:89;pointer-events:none;font:700 16px var(--loud);color:#fff;text-shadow:0 0 6px var(--alarm),2px 2px #000;animation:haha 1s ease-out forwards}
+@media (prefers-reduced-motion:reduce){.fog,.bat .wg{animation:none}}
 .frag{position:fixed;z-index:85;pointer-events:none;background-repeat:no-repeat;will-change:transform}
 .boom{position:fixed;z-index:84;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff 0,#ffe066 25%,#ff7b00 55%,transparent 72%);animation:boom .7s ease-out forwards}
 @keyframes boom{to{transform:scale(9);opacity:0}}
@@ -262,8 +408,10 @@ figcaption b{display:block;font-family:var(--serif);font-size:15px}
 
 <!-- ============ САЙТ ============ -->
 <div class="wrap" id="top">
+<div class="crtlines" aria-hidden="true"></div><div class="moon" id="moon" role="button" aria-label="Луна"><svg class="meye" viewBox="0 0 80 48" aria-hidden="true"><path d="M4 24 Q40 -6 76 24 Q40 54 4 24Z" fill="#fff" stroke="#5a2a6a" stroke-width="3"/><circle cx="40" cy="24" r="11" fill="#7a3fa0"/><circle cx="40" cy="24" r="5" fill="#000"/></svg></div><div class="fog" aria-hidden="true"></div>
+<img class="web l" src="data:image/png;base64,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" alt=""><img class="web r" src="data:image/png;base64,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" alt="">
 
-<div class="notice"><div>⚠ ВНИМАНИЕ ⚠ ЭТОТ САЙТ ПРОСЛУШИВАЕТСЯ ⚠</div></div>
+<div class="notice" id="notice"><div>⚠ ВНИМАНИЕ ⚠ ЭТОТ САЙТ ПРОСЛУШИВАЕТСЯ ⚠</div></div>
 
 <button class="eyebtn" id="eyeBtn" type="button" aria-label="Глаз">
 <svg viewBox="0 0 80 48" width="88" height="53" aria-hidden="true">
@@ -278,8 +426,8 @@ figcaption b{display:block;font-family:var(--serif);font-size:15px}
 </svg>
 </button>
 <p class="unwatched" id="unwatched" hidden>НАБЛЮДЕНИЕ ОТКЛЮЧЕНО</p>
-<h1>ФАЙЛЫ ПРАВДЫ</h1>
-<p class="beware">О с т о р о ж н о . . . . .</p>
+<h1 id="title">ФАЙЛЫ ПРАВДЫ</h1>
+<p class="beware" id="beware">О с т о р о ж н о . . . . .</p>
 <p>Добро пожаловать на мой Сайт!! Вы нашли то место, которое <b>ОНИ</b> не хотят, чтобы вы нашли.
 Читайте всё. Никому не верьте. <span class="badge">ОБНОВЛЕНО!</span></p>
 
@@ -289,8 +437,64 @@ figcaption b{display:block;font-family:var(--serif);font-size:15px}
 
 <hr class="dots">
 
-<nav aria-label="Разделы">
-<a href="#news">Новости дня</a> <span class="d">♦</span> <a href="#files">Засекречено</a> <span class="d">♦</span> <a href="#gallery">Доказательства</a> <span class="d">♦</span> <a href="#rabbits">Архив зайцев</a> <span class="d">♦</span> <a href="#blog">Дневник</a> <span class="d">♦</span> <a href="#cipher">Дешифратор</a> <span class="d">♦</span> <a href="#files">Ухо</a> <span class="d">♦</span> <a href="#files">Ли ТК</a> <span class="d">♦</span> <a href="#files">Птицы</a>
+<nav class="organs" aria-label="Разделы">
+<a class="organ" data-org="brain" href="#blog"><span class="jar"><span class="liquid"></span><span class="bub" style="left:22%;animation-delay:0s;animation-duration:4.2s"></span><span class="bub" style="left:64%;animation-delay:1.3s;animation-duration:5.1s"></span><span class="bub" style="left:42%;animation-delay:2.6s;animation-duration:3.8s"></span><span class="bub" style="left:78%;animation-delay:0.7s;animation-duration:4.6s"></span><span class="bub" style="left:30%;animation-delay:3.4s;animation-duration:5.4s"></span><svg viewBox="0 0 100 100" class="org-svg" aria-hidden="true"><defs><radialGradient id="gBr" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#f6c9c2"/><stop offset=".6" stop-color="#e09a92"/><stop offset="1" stop-color="#a85a58"/></radialGradient><radialGradient id="gCb" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#e4a39a"/><stop offset="1" stop-color="#8f4a4a"/></radialGradient></defs>
+<path d="M57 70 C59 78 59 86 57 94 L51 94 C52 86 52 78 51 72 Z" fill="#d9a49a" stroke="#7d3d3d" stroke-width=".8"/>
+<path d="M64 64 C73 61 85 64 85 71 C84 78 71 81 63 75 Z" fill="url(#gCb)" stroke="#6e3434" stroke-width=".8"/>
+<g stroke="#7a3b3b" stroke-width=".6" fill="none"><path d="M66 67 C72 66 80 67 83 70"/><path d="M65 71 C72 70 79 71 83 73"/><path d="M66 74 C71 75 76 75 80 76"/></g>
+<path d="M18 58 C10 44 16 24 34 18 C46 10 66 12 76 22 C88 30 92 46 86 56 C84 63 77 66 70 65 C64 71 53 72 47 68 C40 73 29 72 24 66 C20 64 18 62 18 58 Z" fill="url(#gBr)" stroke="#7d3d3d" stroke-width="1"/>
+<g stroke="#9c4f4f" stroke-width="1.15" fill="none" stroke-linecap="round"><path d="M28 24 C33 29 28 35 34 39 C40 43 35 49 41 53"/><path d="M42 16 C40 23 46 27 42 33 C38 39 45 43 43 49"/><path d="M69 18 C64 25 70 29 66 35 C62 41 69 45 65 51"/><path d="M80 29 C74 33 80 38 74 42 C68 46 76 52 71 58"/><path d="M21 45 C27 47 25 53 31 55 C37 57 35 62 41 63"/><path d="M75 47 C80 50 84 49 87 52"/><path d="M60 58 C64 62 70 60 74 63"/><path d="M33 31 C37 33 39 30 42 32"/></g>
+<path d="M57 14 C52 28 59 38 51 55" stroke="#7d3434" stroke-width="1.8" fill="none"/>
+<path d="M27 58 C38 52 51 55 63 49" stroke="#7d3434" stroke-width="2" fill="none"/>
+<path class="imp-path" d="M22 54 C26 42 36 30 48 22 C58 17 70 20 78 30 C86 40 84 52 74 58 C64 62 52 62 42 60 C34 58 28 60 26 64" fill="none" stroke="none"/>
+<circle class="imp" r="2.6" fill="#ffe94a" opacity="0"/><circle class="imp2" r="1.6" fill="#ffe94a" opacity="0"/>
+</svg><span class="glass"></span><span class="lid"></span></span><span class="tag"><span class="fig">Fig. 1. <i>Cerebrum</i></span><span class="sec">Дневник</span></span></a>
+<a class="organ" data-org="lungs" href="#files"><span class="jar"><span class="liquid"></span><span class="bub" style="left:22%;animation-delay:0s;animation-duration:4.2s"></span><span class="bub" style="left:64%;animation-delay:1.3s;animation-duration:5.1s"></span><span class="bub" style="left:42%;animation-delay:2.6s;animation-duration:3.8s"></span><span class="bub" style="left:78%;animation-delay:0.7s;animation-duration:4.6s"></span><span class="bub" style="left:30%;animation-delay:3.4s;animation-duration:5.4s"></span><svg viewBox="0 0 100 100" class="org-svg" aria-hidden="true"><defs><linearGradient id="gLu" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f0b2ae"/><stop offset=".5" stop-color="#d9878a"/><stop offset="1" stop-color="#9e4d58"/></linearGradient></defs>
+<g class="lungs">
+<path d="M45 4 H55 V31 H45 Z" fill="#eadcc4" stroke="#8a7a62" stroke-width=".8"/>
+<g stroke="#a8977c" stroke-width=".9"><line x1="45" y1="8" x2="55" y2="8"/><line x1="45" y1="12" x2="55" y2="12"/><line x1="45" y1="16" x2="55" y2="16"/><line x1="45" y1="20" x2="55" y2="20"/><line x1="45" y1="24" x2="55" y2="24"/><line x1="45" y1="28" x2="55" y2="28"/></g>
+<path d="M43 32 C35 30 23 36 17 52 C11 68 13 86 21 92 C29 97 40 93 44 86 C46 70 46 50 43 32 Z" fill="url(#gLu)" stroke="#7a3640" stroke-width="1"/>
+<path d="M57 32 C65 30 77 36 83 52 C89 68 87 86 79 92 C71 97 62 93 58 88 C62 80 56 74 56 66 C56 54 58 44 57 32 Z" fill="url(#gLu)" stroke="#7a3640" stroke-width="1"/>
+<g stroke="#7a3640" stroke-width="1" fill="none"><path d="M17 58 C28 57 37 52 44 47"/><path d="M15 74 C26 71 35 71 44 74"/><path d="M84 63 C74 60 64 55 57 48"/></g>
+<g stroke="#f4d6cf" stroke-width="1.4" fill="none" opacity=".75" stroke-linecap="round"><path d="M50 31 C46 36 40 40 34 48 M40 40 C36 50 32 60 30 70 M34 48 C28 54 24 62 22 72 M50 31 C54 36 60 40 66 48 M60 40 C64 50 68 60 70 72 M66 48 C72 54 76 62 78 72"/></g>
+<g fill="#7a364066"><circle cx="26" cy="64" r=".9"/><circle cx="33" cy="80" r=".9"/><circle cx="72" cy="78" r=".9"/><circle cx="76" cy="58" r=".9"/><circle cx="22" cy="84" r=".9"/></g>
+</g></svg><span class="glass"></span><span class="lid"></span></span><span class="tag"><span class="fig">Fig. 2. <i>Pulmones</i></span><span class="sec">Засекречено</span></span></a>
+<a class="organ" data-org="heart" href="#news"><span class="jar"><span class="liquid"></span><span class="bub" style="left:22%;animation-delay:0s;animation-duration:4.2s"></span><span class="bub" style="left:64%;animation-delay:1.3s;animation-duration:5.1s"></span><span class="bub" style="left:42%;animation-delay:2.6s;animation-duration:3.8s"></span><span class="bub" style="left:78%;animation-delay:0.7s;animation-duration:4.6s"></span><span class="bub" style="left:30%;animation-delay:3.4s;animation-duration:5.4s"></span><svg viewBox="0 0 100 100" class="org-svg" aria-hidden="true"><defs><radialGradient id="gHe" cx=".38" cy=".38" r=".8"><stop offset="0" stop-color="#d5574d"/><stop offset=".55" stop-color="#9e2a26"/><stop offset="1" stop-color="#5e1214"/></radialGradient></defs>
+<g class="heart">
+<path d="M39 46 V16" stroke="#3d5a96" stroke-width="7" stroke-linecap="round"/>
+<path d="M46 40 C42 30 36 26 26 26" stroke="#4a6aa8" stroke-width="8" fill="none" stroke-linecap="round"/>
+<path d="M50 40 C47 24 53 13 63 13 C72 13 77 21 75 31" stroke="#b8332c" stroke-width="9" fill="none"/>
+<g stroke="#b8332c" stroke-width="4" stroke-linecap="round"><line x1="57" y1="15" x2="56" y2="4"/><line x1="64" y1="13" x2="65" y2="3"/><line x1="71" y1="16" x2="74" y2="6"/></g>
+<path d="M36 40 C28 46 26 60 34 72 C42 84 54 92 60 95 C66 87 76 75 78 61 C80 49 74 41 66 39 C58 37 50 39 44 37 Z" fill="url(#gHe)" stroke="#4a0e10" stroke-width="1"/>
+<path d="M48 40 C52 54 56 70 60 92" stroke="#e7c27a" stroke-width="3.2" fill="none" opacity=".75"/>
+<path d="M48 40 C52 54 56 70 60 92" stroke="#e4644f" stroke-width="1.2" fill="none"/>
+<path d="M66 42 C70 52 72 62 70 74" stroke="#5a78b8" stroke-width="1.1" fill="none"/>
+<path d="M36 52 C42 54 46 52 50 50" stroke="#e4644f" stroke-width="1" fill="none"/>
+<ellipse cx="40" cy="54" rx="5" ry="8" fill="#ffffff22"/>
+</g></svg><span class="glass"></span><span class="lid"></span></span><span class="tag"><span class="fig">Fig. 3. <i>Cor</i></span><span class="sec">Новости</span></span></a>
+<a class="organ" data-org="liver" href="#cipher"><span class="jar"><span class="liquid"></span><span class="bub" style="left:22%;animation-delay:0s;animation-duration:4.2s"></span><span class="bub" style="left:64%;animation-delay:1.3s;animation-duration:5.1s"></span><span class="bub" style="left:42%;animation-delay:2.6s;animation-duration:3.8s"></span><span class="bub" style="left:78%;animation-delay:0.7s;animation-duration:4.6s"></span><span class="bub" style="left:30%;animation-delay:3.4s;animation-duration:5.4s"></span><svg viewBox="0 0 100 100" class="org-svg" aria-hidden="true"><defs><linearGradient id="gLi" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#b8513f"/><stop offset=".5" stop-color="#8a2f25"/><stop offset="1" stop-color="#5a1a16"/></linearGradient></defs>
+<g class="liver">
+<path d="M8 42 C12 28 40 22 66 24 C82 25 95 30 93 39 C91 47 79 51 67 57 C55 63 41 71 30 71 C18 71 6 57 8 42 Z" fill="url(#gLi)" stroke="#3f100d" stroke-width="1"/>
+<path d="M55 25 C53 38 51 50 49 65" stroke="#e1b7a0" stroke-width="1.4" fill="none" opacity=".8"/>
+<path d="M57 57 C61 63 66 69 62 73 C58 76 53 70 54 61 Z" fill="#6f8f3c" stroke="#3d5320" stroke-width=".8"/>
+<path d="M20 36 C30 30 44 28 52 29" stroke="#ffffff33" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M44 60 C40 66 38 72 40 80" stroke="#5a78b8" stroke-width="3" fill="none"/><path d="M48 60 C46 68 47 74 48 80" stroke="#b8332c" stroke-width="2" fill="none"/>
+</g></svg><span class="glass"></span><span class="lid"></span></span><span class="tag"><span class="fig">Fig. 4. <i>Hepar</i></span><span class="sec">Шифр</span></span></a>
+<a class="organ" data-org="kidneys" href="#rabbits"><span class="jar"><span class="liquid"></span><span class="bub" style="left:22%;animation-delay:0s;animation-duration:4.2s"></span><span class="bub" style="left:64%;animation-delay:1.3s;animation-duration:5.1s"></span><span class="bub" style="left:42%;animation-delay:2.6s;animation-duration:3.8s"></span><span class="bub" style="left:78%;animation-delay:0.7s;animation-duration:4.6s"></span><span class="bub" style="left:30%;animation-delay:3.4s;animation-duration:5.4s"></span><svg viewBox="0 0 100 100" class="org-svg" aria-hidden="true"><defs><radialGradient id="gKi" cx=".35" cy=".35" r=".8"><stop offset="0" stop-color="#c46a5c"/><stop offset=".6" stop-color="#8e3a35"/><stop offset="1" stop-color="#5c1f1e"/></radialGradient></defs>
+<path d="M47 4 V98" stroke="#b8332c" stroke-width="5"/><path d="M54 4 V98" stroke="#3d5a96" stroke-width="6"/>
+<path d="M47 44 H36" stroke="#b8332c" stroke-width="3"/><path d="M54 47 H39" stroke="#3d5a96" stroke-width="3" opacity=".85"/>
+<path d="M47 44 H64" stroke="#b8332c" stroke-width="3"/><path d="M54 47 H62" stroke="#3d5a96" stroke-width="3"/>
+<path d="M34 52 C38 68 42 84 44 98" stroke="#e8d5b0" stroke-width="2" fill="none"/><path d="M66 52 C62 68 58 84 56 98" stroke="#e8d5b0" stroke-width="2" fill="none"/>
+<g class="kid l"><path d="M28 20 C16 20 10 34 12 48 C14 62 20 74 30 74 C38 74 40 64 36 56 C34 52 34 44 36 40 C40 32 38 20 28 20 Z" fill="url(#gKi)" stroke="#3f100d" stroke-width="1"/><path d="M18 16 C22 12 30 13 32 20 C26 18 22 18 18 22 Z" fill="#e0b34a" stroke="#8a6a20" stroke-width=".6"/></g>
+<g class="kid r"><path d="M72 20 C84 20 90 34 88 48 C86 62 80 74 70 74 C62 74 60 64 64 56 C66 52 66 44 64 40 C60 32 62 20 72 20 Z" fill="url(#gKi)" stroke="#3f100d" stroke-width="1"/><path d="M82 16 C78 12 70 13 68 20 C74 18 78 18 82 22 Z" fill="#e0b34a" stroke="#8a6a20" stroke-width=".6"/></g>
+</svg><span class="glass"></span><span class="lid"></span></span><span class="tag"><span class="fig">Fig. 5. <i>Renes</i></span><span class="sec">Зайцы</span></span></a>
+<a class="organ" data-org="eye" href="#gallery"><span class="jar"><span class="liquid"></span><span class="bub" style="left:22%;animation-delay:0s;animation-duration:4.2s"></span><span class="bub" style="left:64%;animation-delay:1.3s;animation-duration:5.1s"></span><span class="bub" style="left:42%;animation-delay:2.6s;animation-duration:3.8s"></span><span class="bub" style="left:78%;animation-delay:0.7s;animation-duration:4.6s"></span><span class="bub" style="left:30%;animation-delay:3.4s;animation-duration:5.4s"></span><svg viewBox="0 0 100 100" class="org-svg" aria-hidden="true"><defs><radialGradient id="gEy" cx=".35" cy=".35" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#ece0d4"/><stop offset="1" stop-color="#bfa898"/></radialGradient><radialGradient id="gIr" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#2a3f63"/><stop offset=".55" stop-color="#4a72a8"/><stop offset="1" stop-color="#22324f"/></radialGradient></defs>
+<path class="nerve" d="M56 52 C66 52 76 56 86 58 C90 59 94 60 98 60" stroke="#d9c38e" stroke-width="8" fill="none" stroke-linecap="round"/>
+<path class="nerve2" d="M56 52 C66 52 76 56 86 58 C90 59 94 60 98 60" stroke="#f1e2b8" stroke-width="3" fill="none" stroke-linecap="round"/>
+<circle cx="36" cy="50" r="24" fill="url(#gEy)" stroke="#8a6f5e" stroke-width="1"/>
+<g stroke="#c0392b" stroke-width=".6" fill="none" opacity=".8"><path d="M58 46 C52 44 48 40 44 38"/><path d="M58 56 C52 58 49 62 44 63"/><path d="M50 32 C46 36 44 34 40 36"/><path d="M48 68 C45 64 42 66 39 64"/></g>
+<ellipse cx="22" cy="49" rx="9" ry="12" fill="url(#gIr)"/><ellipse cx="21" cy="49" rx="3.6" ry="5" fill="#050505"/><ellipse cx="19" cy="45" rx="1.6" ry="2.2" fill="#fff" opacity=".9"/>
+</svg><span class="glass"></span><span class="lid"></span></span><span class="tag"><span class="fig">Fig. 6. <i>Oculus et nervus opticus</i></span><span class="sec">Улики</span></span></a>
 </nav>
 
 <hr>
@@ -300,7 +504,7 @@ figcaption b{display:block;font-family:var(--serif);font-size:15px}
 <div class="news">
   <h3>В РЕЕСТРЕ ООН НЕ ХВАТАЕТ ЛЮДЕЙ <span class="badge red blink">NEW</span></h3>
   <p class="small" style="text-align:center">Сообщение ООН от 01.10.1967</p>
-  <p style="text-align:center"><span class="big">1 400 000</span></p>
+  <p style="text-align:center"><span class="big" id="bigNum">1 400 000</span></p>
   <p>Пять стран. Пять переписей. Цифры не сходятся. ООН созывает чрезвычайную сессию, и к полуночи кто-то должен быть ВИНОВАТ. Им всё равно кто. Мне — НЕТ.</p>
   <p>Официальная версия: «ошибка в подсчётах». Ха. Ха. Ха. Ошибки не забирают полтора миллиона людей.</p>
 </div>
@@ -398,20 +602,21 @@ figcaption b{display:block;font-family:var(--serif);font-size:15px}
 <p class="small">(настоящее число засекречено)</p>
 
 <p style="margin-top:18px">
-  <span class="btn88" style="background:#ffd400">Никому<br>не верь<br>♦♦♦</span>
-  <span class="btn88" style="background:#39ff14">Лучше всего<br>на ламповом<br>терминале</span>
-  <span class="btn88" style="background:#00ffff">Фольга<br>проверена<br>1967</span>
-  <span class="btn88" style="background:#ff3cf2">Они<br>смотрят<br>👁</span>
+  <span class="btn88" id="bTrust" role="button" tabindex="0" style="background:#ffd400">Никому<br>не верь<br>♦♦♦</span>
+  <span class="btn88" id="bCrt" role="button" tabindex="0" style="background:#39ff14">Лучше всего<br>на ламповом<br>терминале</span>
+  <span class="btn88" id="bFoil" role="button" tabindex="0" style="background:#00ffff">Фольга<br>проверена<br>1967</span>
+  <span class="btn88" id="bWatch" role="button" tabindex="0" style="background:#ff3cf2">Они<br>смотрят<br>👁</span>
 </p>
 
 <p class="back"><a href="#top">Ой-ой! Верните меня наверх.....</a></p>
-<button class="rocket" id="rocket" type="button" aria-label="Ракета Сатурн-5"><img id="rocketImg" src="photos/rocket.png" alt=""></button>
+<div class="launch" id="launch"><svg class="tower" viewBox="0 0 30 230" aria-hidden="true"><g stroke="#c0392b" stroke-width="2" fill="none"><line x1="6" y1="0" x2="6" y2="230"/><line x1="22" y1="0" x2="22" y2="230"/><line x1="6" y1="4" x2="22" y2="18"/><line x1="22" y1="4" x2="6" y2="18"/><line x1="6" y1="4" x2="22" y2="4"/><line x1="6" y1="18" x2="22" y2="32"/><line x1="22" y1="18" x2="6" y2="32"/><line x1="6" y1="18" x2="22" y2="18"/><line x1="6" y1="32" x2="22" y2="46"/><line x1="22" y1="32" x2="6" y2="46"/><line x1="6" y1="32" x2="22" y2="32"/><line x1="6" y1="46" x2="22" y2="60"/><line x1="22" y1="46" x2="6" y2="60"/><line x1="6" y1="46" x2="22" y2="46"/><line x1="6" y1="60" x2="22" y2="74"/><line x1="22" y1="60" x2="6" y2="74"/><line x1="6" y1="60" x2="22" y2="60"/><line x1="6" y1="74" x2="22" y2="88"/><line x1="22" y1="74" x2="6" y2="88"/><line x1="6" y1="74" x2="22" y2="74"/><line x1="6" y1="88" x2="22" y2="102"/><line x1="22" y1="88" x2="6" y2="102"/><line x1="6" y1="88" x2="22" y2="88"/><line x1="6" y1="102" x2="22" y2="116"/><line x1="22" y1="102" x2="6" y2="116"/><line x1="6" y1="102" x2="22" y2="102"/><line x1="6" y1="116" x2="22" y2="130"/><line x1="22" y1="116" x2="6" y2="130"/><line x1="6" y1="116" x2="22" y2="116"/><line x1="6" y1="130" x2="22" y2="144"/><line x1="22" y1="130" x2="6" y2="144"/><line x1="6" y1="130" x2="22" y2="130"/><line x1="6" y1="144" x2="22" y2="158"/><line x1="22" y1="144" x2="6" y2="158"/><line x1="6" y1="144" x2="22" y2="144"/><line x1="6" y1="158" x2="22" y2="172"/><line x1="22" y1="158" x2="6" y2="172"/><line x1="6" y1="158" x2="22" y2="158"/><line x1="6" y1="172" x2="22" y2="186"/><line x1="22" y1="172" x2="6" y2="186"/><line x1="6" y1="172" x2="22" y2="172"/><line x1="6" y1="186" x2="22" y2="200"/><line x1="22" y1="186" x2="6" y2="200"/><line x1="6" y1="186" x2="22" y2="186"/><line x1="6" y1="200" x2="22" y2="214"/><line x1="22" y1="200" x2="6" y2="214"/><line x1="6" y1="200" x2="22" y2="200"/><line x1="6" y1="214" x2="22" y2="228"/><line x1="22" y1="214" x2="6" y2="228"/><line x1="6" y1="214" x2="22" y2="214"/></g><g fill="#8e2a20"><rect x="22" y="40" width="10" height="3"/><rect x="22" y="100" width="10" height="3"/><rect x="22" y="160" width="10" height="3"/></g><circle cx="14" cy="2" r="2.5" fill="#ff2a2a"><animate attributeName="opacity" values="1;0.1;1" dur="1.2s" repeatCount="indefinite"/></circle></svg><button class="rocket" id="rocket" type="button" aria-label="Ракета"><img id="rocketImg" src="photos/rocket.png" alt=""></button><span class="base"></span></div>
 <p class="small">Сайт в разработке. Сайт всегда будет в разработке.</p>
 
 </div>
 
 <script>
 (function(){
+  var calm=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
   /* --- дешифратор (шифр Цезаря, русский алфавит из 33 букв с Ё) --- */
   var AB="АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ", ab=AB.toLowerCase(), N=AB.length;
   function rot(s,n){return s.replace(/[А-ЯЁа-яё]/g,function(c){
@@ -433,7 +638,7 @@ figcaption b{display:block;font-family:var(--serif);font-size:15px}
   /* --- глаз: 3 нажатия — закрывается --- */
   var eyeBtn=document.getElementById('eyeBtn'),irisG=document.getElementById('irisG'),eyeHits=0,eyeShut=false;
   document.addEventListener('pointermove',function(e){
-    if(eyeShut)return;
+    if(eyeShut||document.body.classList.contains('tinfoil'))return;
     var r=eyeBtn.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),d=Math.hypot(dx,dy)||1;
     irisG.setAttribute('transform','translate('+(dx/d*9).toFixed(1)+','+(dy/d*5).toFixed(1)+')');
   });
@@ -459,23 +664,63 @@ figcaption b{display:block;font-family:var(--serif);font-size:15px}
      (вырезки с прозрачным фоном). Если файла нет — рисованная ракета.
      Взрыв → леса и рабочие 30 секунд строят заново → после 5-го взрыва плакат «больше не строим». */
   var ROCKETS=[
-    {file:'photos/rocket.png', svg:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 220"><line x1="20" y1="0" x2="20" y2="20" stroke="#b33" stroke-width="1.6"/><rect x="18.5" y="10" width="3" height="6" fill="#ddd"/><polygon points="14,31 26,31 20,19" fill="#d9d9d9"/><rect x="14" y="31" width="12" height="9" fill="#bdbdbd"/><polygon points="14,40 26,40 27,54 13,54" fill="#eee"/><rect x="13" y="54" width="14" height="34" fill="#f3f3f3"/><rect x="13" y="54" width="7" height="6" fill="#111"/><rect x="13" y="70" width="14" height="3" fill="#111"/><polygon points="13,88 27,88 29,94 11,94" fill="#e6e6e6"/><rect x="11" y="94" width="18" height="48" fill="#f5f5f5"/><rect x="11" y="94" width="18" height="3" fill="#111"/><rect x="11" y="142" width="18" height="6" fill="#222"/><rect x="11" y="148" width="18" height="56" fill="#f7f7f7"/><rect x="11" y="150" width="4.5" height="20" fill="#111"/><rect x="20" y="150" width="4.5" height="20" fill="#111"/><rect x="15.5" y="182" width="4.5" height="20" fill="#111"/><rect x="24.5" y="182" width="4.5" height="20" fill="#111"/><polygon points="11,194 5,212 11,206" fill="#111"/><polygon points="29,194 35,212 29,206" fill="#111"/><rect x="13" y="204" width="14" height="7" fill="#555"/></svg>')},
-    {file:'photos/rocket2.png',svg:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 220"><line x1="20" y1="0" x2="20" y2="18" stroke="#999" stroke-width="1.6"/><polygon points="16,32 24,32 20,16" fill="#e8e8e8"/><rect x="16" y="32" width="8" height="26" fill="#f0f0f0"/><rect x="16" y="44" width="8" height="2" fill="#777"/><polygon points="16,58 24,58 26,64 14,64" fill="#888"/><polygon points="14,64 26,64 29,112 11,112" fill="#ededed"/><rect x="12" y="86" width="16" height="2" fill="#999"/><polygon points="11,112 29,112 30,118 10,118" fill="#666"/><polygon points="10,118 30,118 36,196 4,196" fill="#f2f2f2"/><polygon points="9,140 31,140 31.6,146 8.4,146" fill="#aaa"/><polygon points="7,170 33,170 33.6,176 6.4,176" fill="#aaa"/><rect x="4" y="196" width="32" height="10" fill="#777"/><rect x="6" y="206" width="4" height="6" fill="#444"/><rect x="13" y="206" width="4" height="6" fill="#444"/><rect x="23" y="206" width="4" height="6" fill="#444"/><rect x="30" y="206" width="4" height="6" fill="#444"/></svg>')},
-    {file:'photos/rocket3.png',svg:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 220"><polygon points="17,40 23,40 20,22" fill="#cfd6c4"/><rect x="17" y="40" width="6" height="34" fill="#dfe5d6"/><rect x="17" y="58" width="6" height="2" fill="#555"/><rect x="18" y="74" width="4" height="6" fill="#777"/><rect x="16" y="80" width="8" height="126" fill="#e3e8db"/><rect x="16" y="120" width="8" height="2" fill="#666"/><polygon points="16,104 7,192 7,206 16,206" fill="#d2d9c7"/><polygon points="24,104 33,192 33,206 24,206" fill="#d2d9c7"/><polygon points="16,104 13,150 16,150" fill="#aab39e"/><polygon points="24,104 27,150 24,150" fill="#aab39e"/><rect x="7" y="206" width="5" height="6" fill="#444"/><rect x="17" y="206" width="6" height="6" fill="#444"/><rect x="28" y="206" width="5" height="6" fill="#444"/></svg>')}
+    {file:'photos/rocket.png', svg:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 220"><defs><linearGradient id="w" x1="0" x2="1"><stop offset="0" stop-color="#9da3ad"/><stop offset=".35" stop-color="#ffffff"/><stop offset=".7" stop-color="#e2e4e8"/><stop offset="1" stop-color="#7d828c"/></linearGradient><linearGradient id="k" x1="0" x2="1"><stop offset="0" stop-color="#3a3a40"/><stop offset=".35" stop-color="#202024"/><stop offset="1" stop-color="#050505"/></linearGradient><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#8f9786"/><stop offset=".4" stop-color="#e6ecdc"/><stop offset="1" stop-color="#6f7766"/></linearGradient></defs><line x1="20" y1="0" x2="20" y2="20" stroke="#b33" stroke-width="1.6"/><rect x="18.5" y="10" width="3" height="6" fill="#ddd"/><polygon points="14,31 26,31 20,19" fill="url(#w)"/><rect x="14" y="31" width="12" height="9" fill="url(#w)"/><polygon points="14,40 26,40 27,54 13,54" fill="url(#w)"/><rect x="13" y="54" width="14" height="34" fill="url(#w)"/><rect x="13" y="54" width="7" height="6" fill="url(#k)"/><rect x="13" y="70" width="14" height="3" fill="url(#k)"/><polygon points="13,88 27,88 29,94 11,94" fill="url(#w)"/><rect x="11" y="94" width="18" height="48" fill="url(#w)"/><rect x="11" y="94" width="18" height="3" fill="url(#k)"/><rect x="11" y="142" width="18" height="6" fill="url(#k)"/><rect x="11" y="148" width="18" height="56" fill="url(#w)"/><rect x="11" y="150" width="4.5" height="20" fill="url(#k)"/><rect x="20" y="150" width="4.5" height="20" fill="url(#k)"/><rect x="15.5" y="182" width="4.5" height="20" fill="url(#k)"/><rect x="24.5" y="182" width="4.5" height="20" fill="url(#k)"/><polygon points="11,194 5,212 11,206" fill="url(#k)"/><polygon points="29,194 35,212 29,206" fill="url(#k)"/><rect x="13" y="204" width="14" height="7" fill="#555"/></svg>')},
+    {file:'photos/rocket2.png',svg:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 220"><defs><linearGradient id="w" x1="0" x2="1"><stop offset="0" stop-color="#9da3ad"/><stop offset=".35" stop-color="#ffffff"/><stop offset=".7" stop-color="#e2e4e8"/><stop offset="1" stop-color="#7d828c"/></linearGradient><linearGradient id="k" x1="0" x2="1"><stop offset="0" stop-color="#3a3a40"/><stop offset=".35" stop-color="#202024"/><stop offset="1" stop-color="#050505"/></linearGradient><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#8f9786"/><stop offset=".4" stop-color="#e6ecdc"/><stop offset="1" stop-color="#6f7766"/></linearGradient></defs><line x1="20" y1="0" x2="20" y2="18" stroke="#999" stroke-width="1.6"/><polygon points="16,32 24,32 20,16" fill="url(#w)"/><rect x="16" y="32" width="8" height="26" fill="url(#w)"/><rect x="16" y="44" width="8" height="2" fill="#777"/><polygon points="16,58 24,58 26,64 14,64" fill="#888"/><polygon points="14,64 26,64 29,112 11,112" fill="url(#w)"/><rect x="12" y="86" width="16" height="2" fill="#999"/><polygon points="11,112 29,112 30,118 10,118" fill="#666"/><polygon points="10,118 30,118 36,196 4,196" fill="url(#w)"/><polygon points="9,140 31,140 31.6,146 8.4,146" fill="#aaa"/><polygon points="7,170 33,170 33.6,176 6.4,176" fill="#aaa"/><rect x="4" y="196" width="32" height="10" fill="#777"/><rect x="6" y="206" width="4" height="6" fill="#444"/><rect x="13" y="206" width="4" height="6" fill="#444"/><rect x="23" y="206" width="4" height="6" fill="#444"/><rect x="30" y="206" width="4" height="6" fill="#444"/></svg>')},
+    {file:'photos/rocket3.png',svg:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 220"><defs><linearGradient id="w" x1="0" x2="1"><stop offset="0" stop-color="#9da3ad"/><stop offset=".35" stop-color="#ffffff"/><stop offset=".7" stop-color="#e2e4e8"/><stop offset="1" stop-color="#7d828c"/></linearGradient><linearGradient id="k" x1="0" x2="1"><stop offset="0" stop-color="#3a3a40"/><stop offset=".35" stop-color="#202024"/><stop offset="1" stop-color="#050505"/></linearGradient><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#8f9786"/><stop offset=".4" stop-color="#e6ecdc"/><stop offset="1" stop-color="#6f7766"/></linearGradient></defs><polygon points="17,40 23,40 20,22" fill="url(#g)"/><rect x="17" y="40" width="6" height="34" fill="url(#g)"/><rect x="17" y="58" width="6" height="2" fill="#555"/><rect x="18" y="74" width="4" height="6" fill="#777"/><rect x="16" y="80" width="8" height="126" fill="url(#g)"/><rect x="16" y="120" width="8" height="2" fill="#666"/><polygon points="16,104 7,192 7,206 16,206" fill="url(#g)"/><polygon points="24,104 33,192 33,206 24,206" fill="url(#g)"/><polygon points="16,104 13,150 16,150" fill="#aab39e"/><polygon points="24,104 27,150 24,150" fill="#aab39e"/><rect x="7" y="206" width="5" height="6" fill="#444"/><rect x="17" y="206" width="6" height="6" fill="#444"/><rect x="28" y="206" width="5" height="6" fill="#444"/></svg>')}
   ];
   var rocket=document.getElementById('rocket'),rocketImg=document.getElementById('rocketImg'),boomBusy=false,design=0,booms=0,BUILD_MS=30000;
-  document.body.appendChild(rocket);
+  var launch=document.getElementById('launch');document.body.appendChild(launch);
   function rocketFallback(){var d=ROCKETS[design];if(rocketImg.getAttribute('src')!==d.svg)rocketImg.src=d.svg}
   rocketImg.addEventListener('error',rocketFallback);
   function setDesign(i){design=i%ROCKETS.length;rocketImg.src=ROCKETS[design].file}
   if(rocketImg.complete&&rocketImg.naturalWidth===0)rocketFallback();
 
+  function workerSVG(hammer){
+    return '<svg class="wk" viewBox="0 0 24 36" aria-hidden="true">'+
+      '<g class="leg l"><line x1="12" y1="22" x2="9" y2="33" stroke="#2b3a67" stroke-width="3.2" stroke-linecap="round"/><rect x="6" y="32" width="5" height="2.5" rx="1" fill="#3a2414"/></g>'+
+      '<g class="leg r"><line x1="12" y1="22" x2="15" y2="33" stroke="#2b3a67" stroke-width="3.2" stroke-linecap="round"/><rect x="13" y="32" width="5" height="2.5" rx="1" fill="#3a2414"/></g>'+
+      '<g class="arm l"><line x1="9" y1="14" x2="4.5" y2="21" stroke="#e8b48a" stroke-width="2.6" stroke-linecap="round"/></g>'+
+      '<rect x="8" y="12" width="8" height="11" rx="2" fill="#ff7a00"/><rect x="8" y="16.5" width="8" height="1.6" fill="#fff36b"/><rect x="8" y="20" width="8" height="1.6" fill="#fff36b"/>'+
+      '<g class="arm r"><line x1="15" y1="14" x2="19.5" y2="21" stroke="#e8b48a" stroke-width="2.6" stroke-linecap="round"/>'+
+        (hammer?'<line x1="19.5" y1="21" x2="19.5" y2="15" stroke="#7a4a1e" stroke-width="1.6"/><rect x="17" y="13" width="5.5" height="3" fill="#666"/>':'')+'</g>'+
+      '<circle cx="12" cy="8.5" r="4" fill="#e8b48a"/><circle cx="13.6" cy="8.6" r=".7" fill="#000"/><path d="M11 11 q1.5 1 3 0" stroke="#7a3b2a" stroke-width=".6" fill="none"/>'+
+      '<path d="M7.6 7.4 Q12 1.2 16.4 7.4 Z" fill="#ffd400"/><rect x="7" y="6.9" width="10.5" height="1.6" rx=".8" fill="#e6b800"/>'+
+      '</svg>';
+  }
+  var YELLS=['А-А-А!','МАМА!','НЕ-Е-ЕТ!','Я ЖЕ В КАСКЕ!','ПРОФСОЮЗ!','ОЙ.'];
+  function fallWorker(w,sc,state){
+    var r=w.getBoundingClientRect(),cls=w.className.split(' ').filter(function(c){return /^w\d$/.test(c)})[0];
+    var f=document.createElement('div');f.className='wfall';f.innerHTML=w.innerHTML;f.style.left=r.left+'px';f.style.top=r.top+'px';
+    document.body.appendChild(f);w.remove();
+    state.lost++;var loss=sc.querySelector('.loss');if(loss)loss.textContent='потеряно рабочих: '+state.lost;
+    var y=document.createElement('div');y.className='yell';y.textContent=YELLS[Math.floor(Math.random()*YELLS.length)];document.body.appendChild(y);
+    var x=0,yy=0,vx=rnd(-3,3),vy=-5,rot=0,vr=rnd(-14,14);
+    (function step(){
+      vy+=.45;x+=vx;yy+=vy;rot+=vr;
+      f.style.transform='translate('+x+'px,'+yy+'px) rotate('+rot+'deg)';
+      y.style.left=Math.max(4,Math.min(innerWidth-y.offsetWidth-4,r.left+x-10))+'px';y.style.top=(r.top+yy-22)+'px';
+      if(r.top+yy<innerHeight+40)requestAnimationFrame(step);
+      else{
+        f.remove();y.remove();
+        pop('БУМ!',Math.max(10,Math.min(innerWidth-60,r.left+x)),innerHeight-40);
+        setTimeout(function(){
+          if(!sc.isConnected)return;
+          var n=document.createElement('span');n.className='w '+cls;n.innerHTML=workerSVG(cls==='w4');
+          n.addEventListener('click',function(){fallWorker(n,sc,state)});sc.appendChild(n);
+        },3500);
+      }
+    })();
+  }
   function rebuild(r){
     setDesign(design+1);
     var sc=document.createElement('div');sc.className='scaff';
-    sc.style.cssText='left:'+(r.left-12)+'px;top:'+(r.top-14)+'px;width:'+(r.width+24)+'px;height:'+(r.height+18)+'px';
-    sc.innerHTML='<span class="sign">СТРОИМ</span><span class="cnt"></span>'+
-      '<span class="w w1">👷</span><span class="w w2">👷</span><span class="w w3">👷</span><span class="w w4">👷‍♀️</span>';
+    sc.style.cssText='left:'+(r.left-14)+'px;top:'+(r.top-14)+'px;width:'+(r.width+28)+'px;height:'+(r.height+18)+'px';
+    sc.innerHTML='<span class="sign">СТРОИМ</span><span class="loss"></span><span class="cnt"></span>';
+    var state={lost:0};
+    ['w1','w2','w3','w4','w5'].forEach(function(c){
+      var w=document.createElement('span');w.className='w '+c;w.innerHTML=workerSVG(c==='w4');
+      w.addEventListener('click',function(){fallWorker(w,sc,state)});sc.appendChild(w);
+    });
     document.body.appendChild(sc);
     var cnt=sc.querySelector('.cnt'),t0=Date.now();
     rocketImg.style.transition='none';rocketImg.style.clipPath='inset(100% 0 0 0)';
@@ -488,6 +733,14 @@ figcaption b{display:block;font-family:var(--serif);font-size:15px}
       if(left<=0){clearInterval(tick);sc.remove();rocketImg.style.transition='';rocketImg.style.clipPath='';boomBusy=false}
     },250);
   }
+  /* пар у основания ракеты */
+  setInterval(function(){
+    if(boomBusy||rocket.classList.contains('gone')||document.hidden||calm)return;
+    var r=rocketImg.getBoundingClientRect();if(!r.width)return;
+    var v=document.createElement('div');v.className='vapor';
+    v.style.left=(r.left+r.width/2-11+rnd(-6,6))+'px';v.style.top=(r.bottom-18)+'px';v.style.setProperty('--dx',rnd(-40,40)+'px');
+    document.body.appendChild(v);setTimeout(function(){v.remove()},2500);
+  },900);
   function noMore(r){
     var p=document.createElement('div');p.className='nomore';
     p.innerHTML='<b>ВНИМАНИЕ</b>После пяти аварий программа закрыта.<br><big>БОЛЬШЕ НЕ СТРОИМ</big><small>Комиссия ООН по космосу</small>';
@@ -526,6 +779,216 @@ figcaption b{display:block;font-family:var(--serif);font-size:15px}
       else{parts.forEach(function(o){o.el.remove()});setTimeout(after,600)}
     })(t0);
   });
+
+  /* ===== ХЭЛЛОУИН: летучие мыши, призраки, паук, тыквы, кладбище, след курсора ===== */
+  var GHOST='<svg viewBox="0 0 40 50" aria-hidden="true"><path d="M5 46 V20 A15 15 0 0 1 35 20 V46 l-5 -5 l-5 5 l-5 -5 l-5 5 l-5 -5 z" fill="#fff"/><ellipse cx="15" cy="20" rx="3" ry="4"/><ellipse cx="25" cy="20" rx="3" ry="4"/><ellipse cx="20" cy="30" rx="3" ry="4"/></svg>';
+  var BAT='<svg viewBox="0 0 64 32" aria-hidden="true"><path class="wg l" d="M30 14 C22 2 10 4 2 10 C8 11 10 16 8 20 C13 17 17 20 18 24 C21 19 26 19 30 20 Z" fill="#160b22"/><path class="wg r" d="M34 14 C42 2 54 4 62 10 C56 11 54 16 56 20 C51 17 47 20 46 24 C43 19 38 19 34 20 Z" fill="#160b22"/><ellipse cx="32" cy="17" rx="5" ry="7" fill="#24123a"/><path d="M28 11 l1 -5 l2 4 z M36 11 l-1 -5 l-2 4 z" fill="#24123a"/><circle cx="30.5" cy="15" r="1" fill="#ff3b3b"/><circle cx="33.5" cy="15" r="1" fill="#ff3b3b"/></svg>';
+  var SPIDER='<svg viewBox="0 0 34 30" aria-hidden="true"><g stroke="#111" stroke-width="1.6" fill="none"><path d="M17 14 L4 6 L1 12 M17 15 L3 14 L0 20 M17 16 L5 21 L3 28 M17 17 L9 25 L8 30 M17 14 L30 6 L33 12 M17 15 L31 14 L34 20 M17 16 L29 21 L31 28 M17 17 L25 25 L26 30"/></g><ellipse cx="17" cy="17" rx="6" ry="7" fill="#1a1a1a"/><circle cx="17" cy="9" r="4" fill="#1a1a1a"/><circle cx="15.5" cy="8.5" r="1" fill="#ff3b3b"/><circle cx="18.5" cy="8.5" r="1" fill="#ff3b3b"/><path d="M15 20 h4 l-2 3 z" fill="#c0392b"/></svg>';
+  var live=0;
+  function pop(text,x,y){var p=document.createElement('div');p.className='pop';p.textContent=text;p.style.left=x+'px';p.style.top=y+'px';document.body.appendChild(p);setTimeout(function(){p.remove()},1000)}
+  function spawnGhost(x,y,fromGrave){
+    if(calm)return;
+    var g=document.createElement('div');g.className='sprite ghost';g.innerHTML=GHOST;document.body.appendChild(g);live++;
+    var t0=performance.now(),dur=fromGrave?5000:11000,x0=x==null?rnd(20,innerWidth-80):x,y0=y==null?innerHeight+20:y,dead=false;
+    function end(){if(dead)return;dead=true;g.remove();live--}
+    g.addEventListener('click',function(e){pop('БУ!',e.clientX-10,e.clientY-20);g.style.transition='opacity .3s,transform .3s';g.style.opacity=0;setTimeout(end,300)});
+    (function step(now){
+      if(dead)return;var t=now-t0,p=t/dur;
+      var gx=x0+Math.sin(t/600)*30,gy=y0-p*(fromGrave?220:innerHeight+140);
+      g.style.transform='translate('+gx+'px,'+gy+'px)';g.style.opacity=fromGrave?Math.max(0,1-p):Math.min(1,p*4)*(1-Math.max(0,p-.8)*5);
+      if(p<1)requestAnimationFrame(step);else end();
+    })(t0);
+  }
+  window.spawnGhost=spawnGhost;
+  function spawnBat(){
+    if(calm||live>6||document.hidden)return;
+    var b=document.createElement('div');b.className='sprite bat';b.innerHTML=BAT;document.body.appendChild(b);live++;
+    var ltr=Math.random()<.5,x=ltr?-70:innerWidth+10,y0=rnd(40,innerHeight*.6),vx=(ltr?1:-1)*rnd(2.2,4.5),amp=rnd(20,70),t0=performance.now(),dead=false,falling=false,vy=0,rot=0;
+    if(!ltr)b.style.scale='-1 1';
+    function end(){if(dead)return;dead=true;b.remove();live--}
+    b.addEventListener('click',function(e){if(falling)return;falling=true;pop('ПИСК!',e.clientX-20,e.clientY-24);b.querySelectorAll('.wg').forEach(function(w){w.style.animation='none'})});
+    var y=y0;
+    (function step(now){
+      if(dead)return;var t=now-t0;
+      if(falling){vy+=.5;y+=vy;rot+=18;x+=vx*.3}else{x+=vx;y=y0+Math.sin(t/300)*amp}
+      b.style.transform='translate('+x+'px,'+y+'px) rotate('+rot+'deg)';
+      if(x<-90||x>innerWidth+90||y>innerHeight+60)end();else requestAnimationFrame(step);
+    })(t0);
+  }
+  function spawnSpider(){
+    if(calm||document.querySelector('.spider')||document.hidden)return;
+    var sp=document.createElement('div');sp.className='spider';sp.style.left=rnd(30,innerWidth-60)+'px';
+    sp.innerHTML='<div class="thread"></div>'+SPIDER;document.body.appendChild(sp);
+    var th=sp.querySelector('.thread'),body=sp.querySelector('svg'),target=rnd(innerHeight*.18,innerHeight*.5),len=0,phase='down',t0=performance.now();
+    sp.addEventListener('click',function(e){if(phase!=='up'){phase='up';pop('ИИИ!',e.clientX,e.clientY-20)}});
+    (function step(now){
+      if(phase==='down'){len+=4;if(len>=target){len=target;phase='hang';t0=now}}
+      else if(phase==='hang'){len=target+Math.sin((now-t0)/250)*6;if(now-t0>7000)phase='up'}
+      else{len-=9;if(len<=-30){sp.remove();return}}
+      th.style.height=Math.max(0,len)+'px';body.style.top=len+'px';
+      requestAnimationFrame(step);
+    })(t0);
+  }
+  /* ===== ВСЁ МОЖНО ТЫКНУТЬ ===== */
+  function jig(el,c){c=c||'jig';el.classList.remove(c);void el.offsetWidth;el.classList.add(c)}
+  ['moon','fog','crtlines'].forEach(function(c){var el=document.querySelector('.'+c);if(el)document.body.insertBefore(el,document.body.firstChild)});
+  document.querySelectorAll('.web').forEach(function(w){document.body.insertBefore(w,document.body.firstChild)});
+  /* меню-органы: у каждого органа своя реакция, потом переход к разделу */
+  function goTo(href){var t=document.querySelector(href);if(t)t.scrollIntoView({behavior:calm?'auto':'smooth'})}
+  function impulse(svg){
+    var path=svg.querySelector('.imp-path'),dot=svg.querySelector('.imp'),dot2=svg.querySelector('.imp2'),L=path.getTotalLength(),t0=performance.now(),ms=1100;
+    (function step(now){
+      var p=Math.min(1,(now-t0)/ms),a=path.getPointAtLength(p*L),b=path.getPointAtLength(Math.max(0,p-.06)*L);
+      dot.setAttribute('cx',a.x);dot.setAttribute('cy',a.y);dot.setAttribute('opacity',p<1?1:0);
+      dot2.setAttribute('cx',b.x);dot2.setAttribute('cy',b.y);dot2.setAttribute('opacity',p<1?.6:0);
+      dot.style.filter='drop-shadow(0 0 3px #ffe94a)';
+      if(p<1)requestAnimationFrame(step);
+    })(t0);
+  }
+  function bleed(svg){
+    var r=svg.getBoundingClientRect(),k=r.width/100,spots=[[56,4],[65,3],[74,6],[62,13]];
+    for(var i=0;i<16;i++){
+      (function(i){setTimeout(function(){
+        var sp=spots[i%spots.length],d=document.createElement('div');d.className='blood';document.body.appendChild(d);
+        var x=r.left+sp[0]*k,y=r.top+sp[1]*k,vx=rnd(-1.6,1.6),vy=rnd(-4,-1.5);
+        (function fall(){vy+=.35;x+=vx;y+=vy;d.style.left=x+'px';d.style.top=y+'px';if(y<innerHeight+20)requestAnimationFrame(fall);else d.remove()})();
+      },i*45)})(i);
+    }
+  }
+  function coughPuffs(svg,e){
+    var r=svg.getBoundingClientRect(),k=r.width/100;
+    [0,260].forEach(function(dl,j){setTimeout(function(){
+      for(var i=0;i<5;i++){var p=document.createElement('div');p.className='cough-puff';p.style.left=(r.left+50*k-6+rnd(-4,4))+'px';p.style.top=(r.top+2*k)+'px';p.style.setProperty('--dx',rnd(-30,30)+'px');document.body.appendChild(p);setTimeout(function(x){return function(){x.remove()}}(p),950)}
+      var t=document.createElement('div');t.className='kxe';t.textContent='кхе!';t.style.left=(r.left+50*k+(j?12:-30))+'px';t.style.top=(r.top-10)+'px';document.body.appendChild(t);setTimeout(function(){t.remove()},1000);
+    },dl)});
+  }
+  function writhe(svg){
+    var n1=svg.querySelector('.nerve'),n2=svg.querySelector('.nerve2'),t0=performance.now(),ms=1500;
+    (function step(now){
+      var t=(now-t0),p=Math.min(1,t/ms),amp=10*(1-p),ph=t/90;
+      var pts=[],N=10;for(var i=0;i<=N;i++){var u=i/N,x=56+u*42,y=52+u*8+Math.sin(ph+u*7)*amp*u;pts.push([x,y])}
+      var d='M'+pts[0][0]+' '+pts[0][1];for(var j=1;j<pts.length;j++)d+=' L'+pts[j][0].toFixed(1)+' '+pts[j][1].toFixed(1);
+      if(p>=1)d='M56 52 C66 52 76 56 86 58 C90 59 94 60 98 60';
+      n1.setAttribute('d',d);n2.setAttribute('d',d);
+      if(p<1)requestAnimationFrame(step);
+    })(t0);
+  }
+  function replay(el,c){el.classList.remove(c);void el.offsetWidth;el.classList.add(c)}
+  document.querySelectorAll('.organ').forEach(function(o){
+    o.addEventListener('click',function(e){
+      e.preventDefault();var svg=o.querySelector('.org-svg'),k=o.dataset.org,wait=1300;
+      if(calm){goTo(o.getAttribute('href'));return}
+      if(k==='brain')impulse(svg);
+      else if(k==='lungs'){replay(o,'cough');coughPuffs(svg,e)}
+      else if(k==='heart'){replay(o,'beat');bleed(svg);var jr=o.querySelector('.jar');jr.classList.add('bloody');setTimeout(function(){jr.classList.remove('bloody')},2600)}
+      else if(k==='liver')replay(o,'jelly');
+      else if(k==='kidneys')replay(o,'wiggle');
+      else if(k==='eye'){writhe(svg);wait=1600}
+      setTimeout(function(){goTo(o.getAttribute('href'))},wait);
+    });
+  });
+  /* заголовок: буквы путаются */
+  var title=document.getElementById('title'),TITLE=title.textContent,scr=null;
+  title.addEventListener('click',function(){
+    if(scr)return;var n=0,ab='АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЭЮЯ#%@&';
+    scr=setInterval(function(){
+      n++;title.textContent=TITLE.split('').map(function(ch,i){return ch===' '||i<n/2?ch:ab[Math.floor(Math.random()*ab.length)]}).join('');
+      if(n/2>=TITLE.length){clearInterval(scr);scr=null;title.textContent=TITLE}
+    },35);
+  });
+  /* плашка-предупреждение меняет текст */
+  var NOTICES=['⚠ ВНИМАНИЕ ⚠ ЭТОТ САЙТ ПРОСЛУШИВАЕТСЯ ⚠','⚠ НЕ ОБОРАЧИВАЙТЕСЬ ⚠','⚠ ВАШ КЛИК ЗАПИСАН ⚠','⚠ ПРОСЛУШКА ОТКЛЮЧЕНА (ЭТО ШУТКА) ⚠','⚠ ВЫ УЖЕ В СПИСКЕ ⚠'],ni=0,notice=document.getElementById('notice');
+  notice.addEventListener('click',function(){ni=(ni+1)%NOTICES.length;notice.firstElementChild.textContent=NOTICES[ni];jig(notice)});
+  /* «Осторожно»: буквы разбегаются */
+  var bw=document.getElementById('beware');
+  bw.innerHTML=bw.textContent.split('').map(function(c){return '<span>'+(c===' '?'&nbsp;':c)+'</span>'}).join('');
+  bw.addEventListener('click',function(){
+    bw.querySelectorAll('span').forEach(function(sp){sp.style.transform='translate('+rnd(-30,30)+'px,'+rnd(-40,40)+'px) rotate('+rnd(-90,90)+'deg)'});
+    setTimeout(function(){bw.querySelectorAll('span').forEach(function(sp){sp.style.transform=''})},900);
+  });
+  /* значки крутятся и врут */
+  var BADGES=['ОБНОВЛЕНО!','НЕ ОБНОВЛЕНО','УДАЛЕНО?','ВОССТАНОВЛЕНО','ПРОВЕРЕНО','НЕ ПРОВЕРЕНО'];
+  document.querySelectorAll('.badge').forEach(function(b){
+    var orig=b.textContent,i=0;
+    b.addEventListener('click',function(e){e.stopPropagation();i++;b.textContent=i%3===0?orig:BADGES[Math.floor(Math.random()*BADGES.length)];jig(b,'spin1')});
+  });
+  /* бегущая строка: стоп / поехали */
+  var tk=document.querySelector('.ticker');tk.addEventListener('click',function(){tk.classList.toggle('paused')});
+  /* 1 400 000 пересчитывается */
+  var big=document.getElementById('bigNum'),BIG=big.textContent,bigT=null;
+  big.addEventListener('click',function(e){
+    e.stopPropagation();if(bigT)return;var k=0;
+    bigT=setInterval(function(){k++;big.textContent=BIG.replace(/\d/g,function(){return Math.floor(Math.random()*10)});if(k>18){clearInterval(bigT);bigT=null;big.textContent=BIG}},50);
+  });
+  /* счётчик посетителей сходит с ума */
+  var cnt=document.getElementById('counter'),cntT=null;
+  cnt.addEventListener('click',function(){
+    if(cntT)return;var k=0;
+    cntT=setInterval(function(){k++;cnt.querySelectorAll('span').forEach(function(d){d.textContent=Math.floor(Math.random()*10)});if(k>20){clearInterval(cntT);cntT=null}},45);
+  });
+  /* кнопки 88×31 — у каждой своё действие */
+  function toast(t){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2500)}
+  function onKey(el,fn){el.addEventListener('click',fn);el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();fn()}})}
+  /* «Никому не верь»: меню начинает врать — органы ведут не туда */
+  var lying=false,ORGS=[].map.call(document.querySelectorAll('.organ'),function(t){return {href:t.getAttribute('href'),sec:t.querySelector('.sec').textContent}});
+  onKey(document.getElementById('bTrust'),function(){
+    lying=!lying;var cards=document.querySelectorAll('.organ'),order=ORGS.map(function(x,i){return i});
+    if(lying){do{order.sort(function(){return Math.random()-.5})}while(order.some(function(v,i){return v===i}))}
+    cards.forEach(function(c,i){c.setAttribute('href',ORGS[order[i]].href);c.querySelector('.sec').textContent=lying?ORGS[(i+1)%ORGS.length].sec:ORGS[i].sec});
+    document.getElementById('bTrust').classList.toggle('on',lying);
+    toast(lying?'МЕНЮ БОЛЬШЕ НЕ ГОВОРИТ ПРАВДУ':'МЕНЮ СНОВА ЧЕСТНОЕ. НАВЕРНОЕ.');
+  });
+  /* «Ламповый терминал»: зелёный экран с полосами */
+  onKey(document.getElementById('bCrt'),function(){
+    var on=document.body.classList.toggle('crt');document.getElementById('bCrt').classList.toggle('on',on);
+    toast(on?'РЕЖИМ ЛАМПОВОГО ТЕРМИНАЛА':'ЦВЕТНОЙ РЕЖИМ ВОССТАНОВЛЕН');
+  });
+  /* «Фольга»: шапочка на глаз, прослушка заблокирована */
+  onKey(document.getElementById('bFoil'),function(){
+    var on=document.body.classList.toggle('tinfoil');document.getElementById('bFoil').classList.toggle('on',on);
+    if(on)irisG.setAttribute('transform','');
+    toast(on?'ПРОСЛУШКА ЗАБЛОКИРОВАНА ФОЛЬГОЙ':'ФОЛЬГА СНЯТА. ВАС СНОВА СЛЫШНО');
+  });
+  /* «Они смотрят»: по краям экрана открываются глаза и следят за вами */
+  var WEYE='<svg viewBox="0 0 80 48" aria-hidden="true"><path d="M4 24 Q40 -6 76 24 Q40 54 4 24Z" fill="#fff" stroke="#ff3cf2" stroke-width="4"/><g class="wi"><circle cx="40" cy="24" r="11" fill="#ff3cf2"/><circle cx="40" cy="24" r="5" fill="#000"/></g></svg>';
+  var watching=false;
+  onKey(document.getElementById('bWatch'),function(){
+    if(watching)return;watching=true;document.getElementById('bWatch').classList.add('on');toast('ОНИ СМОТРЯТ');
+    var eyes=[];
+    for(var i=0;i<14;i++){
+      var e=document.createElement('div');e.className='watcher';e.innerHTML=WEYE;
+      var side=i%4,x,y;
+      if(side===0){x=rnd(0,innerWidth-46);y=rnd(10,60)}else if(side===1){x=rnd(0,innerWidth-46);y=rnd(innerHeight-90,innerHeight-40)}
+      else if(side===2){x=rnd(4,40);y=rnd(60,innerHeight-90)}else{x=rnd(innerWidth-90,innerWidth-50);y=rnd(60,innerHeight-90)}
+      e.style.left=x+'px';e.style.top=y+'px';e.style.animationDelay=(i*60)+'ms';document.body.appendChild(e);eyes.push(e);
+    }
+    function look(ev){eyes.forEach(function(e){var r=e.getBoundingClientRect(),dx=ev.clientX-(r.left+r.width/2),dy=ev.clientY-(r.top+r.height/2),d=Math.hypot(dx,dy)||1;e.querySelector('.wi').setAttribute('transform','translate('+(dx/d*10).toFixed(1)+','+(dy/d*6).toFixed(1)+')')})}
+    document.addEventListener('pointermove',look);
+    setTimeout(function(){document.removeEventListener('pointermove',look);eyes.forEach(function(e){e.remove()});watching=false;document.getElementById('bWatch').classList.remove('on')},6000);
+  });
+  /* заголовок раздела: свернуть / развернуть раздел */
+  document.querySelectorAll('.wrap section>h2').forEach(function(h){h.addEventListener('click',function(){h.parentElement.classList.toggle('folded')})});
+  /* теории: клик — засекретить / рассекретить */
+  document.querySelectorAll('.files li').forEach(function(li){li.addEventListener('click',function(){li.classList.toggle('red')})});
+  /* дневник: на записи остаётся след от кружки */
+  document.querySelectorAll('.blog article').forEach(function(a){a.addEventListener('click',function(){a.classList.toggle('cup')})});
+  /* зайцы в архиве прыгают */
+  document.getElementById('archive').addEventListener('click',function(e){var r=e.target.closest('.rab');if(r&&!e.target.closest('.kill'))jig(r,'hop')});
+  /* фото: увеличить; если фото нет — «доступ запрещён» */
+  document.querySelectorAll('.photo').forEach(function(ph){
+    ph.addEventListener('click',function(e){
+      if(ph.classList.contains('missing')){jig(ph);pop('ДОСТУП ЗАПРЕЩЁН',e.clientX-60,e.clientY-20);return}
+      var lb=document.createElement('div');lb.className='lightbox';
+      var fig=document.createElement('figure');var im=document.createElement('img');im.src=ph.querySelector('img').src;im.alt='';
+      var cap=document.createElement('figcaption');cap.innerHTML=ph.querySelector('figcaption').innerHTML;
+      fig.appendChild(im);fig.appendChild(cap);lb.appendChild(fig);document.body.appendChild(lb);
+      lb.addEventListener('click',function(){lb.remove()});
+    });
+  });
+  /* луна открывает глаз */
+  var moon=document.getElementById('moon'),moonT=null;
+  moon.addEventListener('click',function(){moon.classList.add('watch');clearTimeout(moonT);moonT=setTimeout(function(){moon.classList.remove('watch')},2200)});
+
 
   /* --- фото: если файла нет, показываем заглушку --- */
   document.querySelectorAll('.photo img').forEach(function(img){
